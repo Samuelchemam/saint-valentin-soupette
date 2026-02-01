@@ -15,11 +15,11 @@
             height: 100vh;
             background: radial-gradient(circle at center, #f6e6f0, #ffc1e3);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Empêche le scroll */
+            overflow: hidden;
             color: #333;
         }
 
-        /* --- Cœurs en arrière-plan --- */
+        /* --- Animation Cœurs --- */
         .bg-heart {
             position: absolute;
             color: rgba(255, 255, 255, 0.6);
@@ -35,93 +35,43 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- Écran de Configuration (Pour toi uniquement) --- */
+        /* --- 1. Écran de Configuration (ADMIN) --- */
         #setup-screen {
-            display: flex; /* Flex par défaut, sera caché par JS si lien partagé */
+            display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             background: white;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             z-index: 200;
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
-            text-align: center;
-        }
-
-        #setup-screen h2 {
-            margin-top: 0;
-            color: #d946a6;
-        }
-
-        .input-group {
-            width: 100%;
-            margin-bottom: 1rem;
             text-align: left;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #555;
+        #setup-screen h2 { margin-top: 0; color: #d946a6; text-align: center; }
+        .input-group { width: 100%; margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 0.8rem; border: 2px solid #ffc1e3; border-radius: 8px; box-sizing: border-box;
         }
 
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #ffc1e3;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
+        .option-container { display: none; border-top: 1px solid #eee; padding-top: 1rem; margin-top: 1rem; }
+        .option-container.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         #generate-btn {
-            margin-top: 1rem;
-            padding: 0.9rem 2rem;
-            background: #333;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
+            margin-top: 1.5rem; padding: 1rem; background: #333; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.3s;
         }
+        #generate-btn:hover { background: #555; }
 
-        #share-link-container {
-            margin-top: 1.5rem;
-            display: none; /* Caché par défaut */
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
+        #share-section { margin-top: 1.5rem; display: none; background: #f9f9f9; padding: 1rem; border-radius: 8px; text-align: center; }
+        #share-url { font-size: 0.8rem; word-break: break-all; color: #666; margin-bottom: 10px; display: block; }
+        .copy-btn { background: #d946a6; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
-        #share-url {
-            padding: 10px;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            word-break: break-all;
-            color: #555;
-        }
-
-        .copy-btn {
-            background: #d946a6;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* --- Container Principal (Demande) --- */
+        /* --- 2. Interface Destinataire (DEMANDE) --- */
         .container {
-            display: none; /* Caché tant que pas activé */
+            display: none;
             text-align: center;
             z-index: 10;
             background: rgba(255, 255, 255, 0.95);
@@ -132,98 +82,106 @@
             max-width: 90%;
         }
 
-        .container h1 {
-            margin-top: 0;
-            color: #d946a6;
-            font-size: 1.8rem;
-            line-height: 1.3;
-            margin-bottom: 2rem;
-        }
-
+        .container h1 { margin-top: 0; color: #d946a6; font-size: 1.8rem; margin-bottom: 2rem; }
+        
         .button-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
+            display: flex; gap: 20px; justify-content: center; align-items: center; min-height: 60px;
         }
 
         .btn {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            min-width: 100px;
+            padding: 1rem 2rem; font-size: 1.1rem; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-width: 100px;
         }
 
-        #yesBtn {
-            background: linear-gradient(135deg, #56ab2f, #a8e063);
-            color: white;
-            z-index: 20;
-        }
-
+        #yesBtn { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; z-index: 20; }
         #yesBtn:hover { transform: scale(1.05); }
 
         #noBtn {
-            background: linear-gradient(135deg, #eb3349, #f45c43);
-            color: white;
-            position: fixed; /* Position absolue par rapport à la fenêtre */
-            z-index: 30;
-            transition: top 0.3s ease-out, left 0.3s ease-out; /* Mouvement fluide */
+            background: linear-gradient(135deg, #eb3349, #f45c43); color: white; position: fixed; z-index: 30; transition: top 0.2s ease-out, left 0.2s ease-out;
         }
 
-        /* --- Message Succès --- */
-        .success-message {
+        /* --- 3. POPUP (Motivation) --- */
+        .popup-overlay {
             display: none;
-            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
             align-items: center;
-            z-index: 100;
+        }
+        .popup-overlay.visible { display: flex; animation: popIn 0.3s ease-out; }
+
+        .popup-content {
             background: white;
             padding: 2rem;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            max-width: 300px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
-        
-        .success-message h1 { color: #56ab2f; }
-        .heart-icon { font-size: 4rem; animation: heartbeat 1.5s infinite; }
-        
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.15); }
-            30% { transform: scale(1); }
+        .popup-content h3 { color: #d946a6; margin-top: 0; font-size: 1.5rem; }
+        .popup-content p { color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .popup-btn {
+            background: #d946a6; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 20px; cursor: pointer; font-weight: bold; transition: transform 0.2s;
         }
+        .popup-btn:hover { transform: scale(1.05); }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- 4. Message Succès --- */
+        .success-message {
+            display: none; flex-direction: column; align-items: center; z-index: 100; background: white; padding: 2rem; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15); max-width: 90%;
+        }
+        .success-message h1 { color: #56ab2f; margin-bottom: 10px; }
+        .heart-icon { font-size: 4rem; animation: heartbeat 1.5s infinite; margin-bottom: 1rem; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } }
 
     </style>
 </head>
 <body>
 
     <div id="setup-screen">
-        <h2>⚙️ Créer ta demande</h2>
-        <p style="font-size: 0.9rem; color:#666; margin-bottom: 1.5rem;">
-            Remplis ceci pour générer un lien unique. Envoie le lien généré à la personne : elle ne verra pas cet écran.
-        </p>
-
+        <h2>⚙️ Configurer la demande</h2>
         <div class="input-group">
-            <label>Son prénom :</label>
-            <input type="text" id="target-name" placeholder="Ex: Sarah" />
-        </div>
-        
-        <div class="input-group">
-            <label>Genre de la demande :</label>
-            <select id="target-gender">
-                <option value="F">Veux-tu être ma Valentine ?</option>
-                <option value="M">Veux-tu être mon Valentin ?</option>
+            <label>Type de question :</label>
+            <select id="mode-selector">
+                <option value="valentine">Saint-Valentin (Automatique)</option>
+                <option value="custom">Question Personnalisée (Libre)</option>
             </select>
         </div>
 
-        <button id="generate-btn">Générer le lien magique ✨</button>
+        <div id="opt-valentine" class="option-container active">
+            <div class="input-group">
+                <label>Son prénom :</label>
+                <input type="text" id="val-name" placeholder="Ex: Sarah" />
+            </div>
+            <div class="input-group">
+                <label>Genre :</label>
+                <select id="val-gender">
+                    <option value="F">Ma Valentine</option>
+                    <option value="M">Mon Valentin</option>
+                </select>
+            </div>
+        </div>
 
-        <div id="share-link-container">
-            <div id="share-url"></div>
+        <div id="opt-custom" class="option-container">
+            <div class="input-group">
+                <label>Ta question exacte :</label>
+                <input type="text" id="cust-question" placeholder="Ex: On va manger des sushis ?" />
+            </div>
+            <div class="input-group">
+                <label>Message si OUI :</label>
+                <input type="text" id="cust-success" placeholder="Ex: Parfait, je commande ! ❤️" />
+            </div>
+        </div>
+
+        <button id="generate-btn">Créer le lien</button>
+        <div id="share-section">
+            <span id="share-url"></span>
             <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
         </div>
     </div>
@@ -236,112 +194,140 @@
         </div>
     </div>
 
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Oups ! 🤭</h3>
+            <p>Allez... tu sais que tu as envie de dire OUI ! 😏</p>
+            <button class="popup-btn" id="close-popup">C'est vrai...</button>
+        </div>
+    </div>
+
     <div class="success-message" id="success-message">
         <div class="heart-icon">❤️</div>
-        <h1>Yaaay !</h1>
+        <h1>Yesss !</h1>
         <p id="success-text"></p>
     </div>
 
     <script>
-        // --- LOGIQUE DE DÉMARRAGE ---
+        // --- LOGIQUE ADMIN / USER ---
         const urlParams = new URLSearchParams(window.location.search);
-        const nameParam = urlParams.get('name'); // Récupère le nom dans l'URL
-        const genderParam = urlParams.get('gender'); // Récupère le genre dans l'URL
+        const qParam = urlParams.get('q');
+        const rParam = urlParams.get('r');
 
         const setupScreen = document.getElementById('setup-screen');
         const mainContainer = document.getElementById('main-container');
-        const proposalText = document.getElementById('proposal-text');
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
+        const popup = document.getElementById('popup-overlay');
 
-        if (nameParam) {
-            // MODE VISITEUR : Paramètres détectés, on cache la config et on lance la demande
+        // Toggle Admin
+        const modeSelector = document.getElementById('mode-selector');
+        const optValentine = document.getElementById('opt-valentine');
+        const optCustom = document.getElementById('opt-custom');
+
+        modeSelector.addEventListener('change', (e) => {
+            if(e.target.value === 'valentine') {
+                optValentine.classList.add('active');
+                optCustom.classList.remove('active');
+            } else {
+                optValentine.classList.remove('active');
+                optCustom.classList.add('active');
+            }
+        });
+
+        // Affichage Interface
+        if (qParam && rParam) {
             setupScreen.style.display = 'none';
             mainContainer.style.display = 'block';
-            
-            // Configuration du texte
-            const decodedName = decodeURIComponent(nameParam);
-            const isFemale = genderParam !== 'M';
-            const textGender = isFemale ? 'ma Valentine' : 'mon Valentin';
-            
-            proposalText.textContent = `${decodedName}, veux-tu être ${textGender} ? 💖`;
-            
-            // Initialisation Position Bouton NON (à côté du OUI au départ)
+            document.getElementById('proposal-text').textContent = decodeURIComponent(qParam);
+            document.getElementById('success-text').textContent = decodeURIComponent(rParam);
+
+            // Positionnement initial
             setTimeout(() => {
                 const yesRect = yesBtn.getBoundingClientRect();
                 noBtn.style.left = (yesRect.right + 20) + 'px';
                 noBtn.style.top = yesRect.top + 'px';
             }, 100);
-
-            generateHearts(); // Lancer l'animation de fond
+            generateHearts();
         } else {
-            // MODE CRÉATEUR : Pas de paramètres, on affiche la config
             setupScreen.style.display = 'flex';
         }
 
-        // --- GÉNÉRATION DU LIEN ---
+        // --- GÉNÉRATION LIEN ---
         document.getElementById('generate-btn').addEventListener('click', () => {
-            const nameVal = document.getElementById('target-name').value.trim();
-            const genderVal = document.getElementById('target-gender').value;
+            const mode = modeSelector.value;
+            let question = "", reponse = "";
 
-            if (!nameVal) { alert("Mets un prénom !"); return; }
-
-            // Création de l'URL propre
+            if (mode === 'valentine') {
+                const name = document.getElementById('val-name').value.trim();
+                const gender = document.getElementById('val-gender').value;
+                if (!name) { alert("Prénom manquant !"); return; }
+                const role = gender === 'F' ? "ma Valentine" : "mon Valentin";
+                question = `${name}, veux-tu être ${role} ? 💖`;
+                reponse = `Je savais que tu dirais OUI ! ❤️`;
+            } else {
+                question = document.getElementById('cust-question').value.trim();
+                reponse = document.getElementById('cust-success').value.trim();
+                if (!question || !reponse) { alert("Remplis tout !"); return; }
+            }
             const baseUrl = window.location.href.split('?')[0];
-            const finalUrl = `${baseUrl}?name=${encodeURIComponent(nameVal)}&gender=${genderVal}`;
-
+            const finalUrl = `${baseUrl}?q=${encodeURIComponent(question)}&r=${encodeURIComponent(reponse)}`;
             document.getElementById('share-url').textContent = finalUrl;
-            document.getElementById('share-link-container').style.display = 'flex';
+            document.getElementById('share-section').style.display = 'block';
         });
 
         function copyLink() {
-            const urlText = document.getElementById('share-url').textContent;
-            navigator.clipboard.writeText(urlText).then(() => {
-                alert("Lien copié ! Envoie-le à ton date 🚀");
-            });
+            navigator.clipboard.writeText(document.getElementById('share-url').textContent)
+                .then(() => alert("Lien copié ! 🚀"));
         }
 
-        // --- MOTEUR PHYSIQUE DU BOUTON NON ---
-        function moveButton(e) {
-            // Empêche le clic sur mobile
-            if(e.type === 'touchstart') e.preventDefault(); 
+        // --- MÉCANIQUE BOUTON NON + POPUP ---
+        let attemptCount = 0;
+        let scaleSize = 1;
 
+        function moveButton(e) {
+            if(e.type === 'touchstart') e.preventDefault(); 
+            
+            // Compteur & Gros OUI
+            attemptCount++;
+            scaleSize += 0.1;
+            yesBtn.style.transform = `scale(${scaleSize})`;
+
+            // Trigger Popup au 3ème essai
+            if (attemptCount === 3) {
+                popup.classList.add('visible');
+            }
+
+            // Déplacement bouton NON
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
-            
-            // Marges de sécurité (pour ne pas coller aux bords)
             const padding = 20;
-            
-            // Calculer l'espace disponible (Viewport - taille bouton - marge)
             const maxW = window.innerWidth - btnWidth - padding;
             const maxH = window.innerHeight - btnHeight - padding;
-
-            // Générer nouvelle position aléatoire dans la zone visible
-            // Math.max(padding, ...) assure qu'on ne sort pas à gauche/haut
-            // Math.min(maxW, ...) assure qu'on ne sort pas à droite/bas
+            
             const newX = Math.max(padding, Math.random() * maxW);
             const newY = Math.max(padding, Math.random() * maxH);
-
+            
             noBtn.style.left = newX + "px";
             noBtn.style.top = newY + "px";
         }
 
-        // Déclencheurs de fuite
-        noBtn.addEventListener('mouseover', moveButton); // Pour souris (PC)
-        noBtn.addEventListener('touchstart', moveButton); // Pour tactile (Mobile)
-        noBtn.addEventListener('click', moveButton); // Sécurité supplémentaire
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton);
+        noBtn.addEventListener('click', moveButton);
 
-        // --- BOUTON OUI ---
+        // Fermeture Popup
+        document.getElementById('close-popup').addEventListener('click', () => {
+            popup.classList.remove('visible');
+        });
+
+        // --- SUCCESS ---
         yesBtn.addEventListener('click', () => {
             mainContainer.style.display = 'none';
             document.getElementById('success-message').style.display = 'flex';
-            
-            const isFemale = genderParam !== 'M';
-            document.getElementById('success-text').textContent = 
-                `Je savais que tu dirais oui ! ❤️`;
         });
 
-        // --- DÉCORATION ---
+        // --- BACKGROUND ---
         function generateHearts() {
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {

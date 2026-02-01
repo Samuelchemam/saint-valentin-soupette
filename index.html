@@ -58,7 +58,6 @@
       background-color: #ffffff;
       color: #ff4081;
       border: 2px solid #ff4081;
-      position: absolute;
     }
     #success-message {
       display: none;
@@ -123,6 +122,7 @@
     const successMessage = document.getElementById('success-message');
 
     function moveButton() {
+          btnNo.style.position = 'absolute';
       const btnWidth = btnNo.offsetWidth;
       const btnHeight = btnNo.offsetHeight;
       const padding = 50;

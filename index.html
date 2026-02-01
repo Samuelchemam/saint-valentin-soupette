@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>Demande Valentin</title>
+    <title>Une question pour toi...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         /* --- Styles Généraux --- */
@@ -15,11 +15,11 @@
             height: 100vh;
             background: radial-gradient(circle at center, #f6e6f0, #ffc1e3);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Empêche le scroll */
             color: #333;
         }
 
-        /* --- Cœurs en arrière-plan (Effet visuel) --- */
+        /* --- Cœurs en arrière-plan --- */
         .bg-heart {
             position: absolute;
             color: rgba(255, 255, 255, 0.6);
@@ -35,31 +35,30 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- Écran de Configuration --- */
+        /* --- Écran de Configuration (Pour toi uniquement) --- */
         #setup-screen {
-            display: flex;
+            display: flex; /* Flex par défaut, sera caché par JS si lien partagé */
             flex-direction: column;
             align-items: center;
             justify-content: center;
             background: white;
-            padding: 3rem 2.5rem;
+            padding: 2.5rem;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            z-index: 100;
+            z-index: 200;
             max-width: 400px;
+            width: 90%;
             text-align: center;
         }
 
         #setup-screen h2 {
             margin-top: 0;
             color: #d946a6;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
         }
 
         .input-group {
             width: 100%;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             text-align: left;
         }
 
@@ -67,298 +66,294 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            font-size: 0.9rem;
             color: #555;
         }
 
-        .input-group input,
-        .input-group select {
+        .input-group input, .input-group select {
             width: 100%;
             padding: 0.8rem;
             border: 2px solid #ffc1e3;
             border-radius: 8px;
             font-size: 1rem;
             box-sizing: border-box;
-            transition: border-color 0.3s;
         }
 
-        .input-group input:focus,
-        .input-group select:focus {
-            border-color: #d946a6;
-            outline: none;
-        }
-
-        #start-btn {
+        #generate-btn {
             margin-top: 1rem;
-            padding: 0.9rem 2.5rem;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            padding: 0.9rem 2rem;
+            background: #333;
             color: white;
             border: none;
             border-radius: 25px;
-            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            width: 100%;
         }
 
-        #start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        #share-link-container {
+            margin-top: 1.5rem;
+            display: none; /* Caché par défaut */
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
         }
 
-        /* --- Container principal (après configuration) --- */
+        #share-url {
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            word-break: break-all;
+            color: #555;
+        }
+
+        .copy-btn {
+            background: #d946a6;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- Container Principal (Demande) --- */
         .container {
-            display: none;
+            display: none; /* Caché tant que pas activé */
             text-align: center;
             z-index: 10;
-            background: white;
-            padding: 3rem 2.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             position: relative;
+            max-width: 90%;
         }
 
         .container h1 {
             margin-top: 0;
             color: #d946a6;
-            font-size: 2rem;
+            font-size: 1.8rem;
+            line-height: 1.3;
             margin-bottom: 2rem;
         }
 
         .button-container {
             display: flex;
-            gap: 1.5rem;
+            gap: 20px;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 100px;
         }
 
         #yesBtn {
             background: linear-gradient(135deg, #56ab2f, #a8e063);
             color: white;
+            z-index: 20;
         }
 
-        #yesBtn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(86, 171, 47, 0.4);
-        }
+        #yesBtn:hover { transform: scale(1.05); }
 
         #noBtn {
             background: linear-gradient(135deg, #eb3349, #f45c43);
             color: white;
-            position: fixed;
-            z-index: 1000;
+            position: fixed; /* Position absolue par rapport à la fenêtre */
+            z-index: 30;
+            transition: top 0.3s ease-out, left 0.3s ease-out; /* Mouvement fluide */
         }
 
-        /* --- Message de Succès --- */
+        /* --- Message Succès --- */
         .success-message {
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             z-index: 100;
             background: white;
-            padding: 3rem 2.5rem;
+            padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         }
-
-        .success-message h1 {
-            color: #56ab2f;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .success-message p {
-            font-size: 1.3rem;
-            color: #555;
-            line-height: 1.6;
-        }
-
-        .heart-icon {
-            font-size: 4rem;
-            animation: heartbeat 1.5s infinite;
-        }
-
+        
+        .success-message h1 { color: #56ab2f; }
+        .heart-icon { font-size: 4rem; animation: heartbeat 1.5s infinite; }
+        
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
-            10%, 30% { transform: scale(1.1); }
-            20%, 40% { transform: scale(1.15); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
         }
+
     </style>
 </head>
 <body>
-    <!-- Écran de configuration -->
+
     <div id="setup-screen">
-        <h2>💕 Configuration 💕</h2>
+        <h2>⚙️ Créer ta demande</h2>
+        <p style="font-size: 0.9rem; color:#666; margin-bottom: 1.5rem;">
+            Remplis ceci pour générer un lien unique. Envoie le lien généré à la personne : elle ne verra pas cet écran.
+        </p>
+
         <div class="input-group">
-            <label for="name-input">Ton prénom :</label>
-            <input type="text" id="name-input" placeholder="Ex: Sarah" />
+            <label>Son prénom :</label>
+            <input type="text" id="target-name" placeholder="Ex: Sarah" />
         </div>
+        
         <div class="input-group">
-            <label for="gender-input">Genre :</label>
-            <select id="gender-input">
-                <option value="valentin">Valentin</option>
-                <option value="valentine">Valentine</option>
+            <label>Genre de la demande :</label>
+            <select id="target-gender">
+                <option value="F">Veux-tu être ma Valentine ?</option>
+                <option value="M">Veux-tu être mon Valentin ?</option>
             </select>
         </div>
-        <button id="start-btn">Démarrer</button>
+
+        <button id="generate-btn">Générer le lien magique ✨</button>
+
+        <div id="share-link-container">
+            <div id="share-url"></div>
+            <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
+        </div>
     </div>
 
-    <!-- Container principal -->
     <div class="container" id="main-container">
-        <h1 id="proposal-text">Veux-tu être ma Valentine ? 💖</h1>
+        <h1 id="proposal-text">...</h1>
         <div class="button-container">
             <button class="btn" id="yesBtn">OUI</button>
             <button class="btn" id="noBtn">NON</button>
         </div>
     </div>
 
-    <!-- Message de succès -->
     <div class="success-message" id="success-message">
         <div class="heart-icon">❤️</div>
-        <h1>Yaaay ! 🎉</h1>
-        <p id="success-text">Je savais que tu dirais oui ! ❤️</p>
+        <h1>Yaaay !</h1>
+        <p id="success-text"></p>
     </div>
 
     <script>
-        let userName = "";
-        let userGender = "valentine";
+        // --- LOGIQUE DE DÉMARRAGE ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameParam = urlParams.get('name'); // Récupère le nom dans l'URL
+        const genderParam = urlParams.get('gender'); // Récupère le genre dans l'URL
 
-        // --- Démarrage après configuration ---
-        document.getElementById('start-btn').addEventListener('click', () => {
-            const nameInput = document.getElementById('name-input').value.trim();
-            const genderInput = document.getElementById('gender-input').value;
+        const setupScreen = document.getElementById('setup-screen');
+        const mainContainer = document.getElementById('main-container');
+        const proposalText = document.getElementById('proposal-text');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+
+        if (nameParam) {
+            // MODE VISITEUR : Paramètres détectés, on cache la config et on lance la demande
+            setupScreen.style.display = 'none';
+            mainContainer.style.display = 'block';
             
-            if (!nameInput) {
-                alert('Merci de saisir un prénom !');
-                return;
-            }
+            // Configuration du texte
+            const decodedName = decodeURIComponent(nameParam);
+            const isFemale = genderParam !== 'M';
+            const textGender = isFemale ? 'ma Valentine' : 'mon Valentin';
             
-            userName = nameInput;
-            userGender = genderInput;
+            proposalText.textContent = `${decodedName}, veux-tu être ${textGender} ? 💖`;
             
-            // Mise à jour du texte selon le genre
-            const genderText = userGender === 'valentin' ? 'mon Valentin' : 'ma Valentine';
-            document.getElementById('proposal-text').textContent = `${userName}, veux-tu être ${genderText} ? 💖`;
-            
-            // Masquer l'écran de config, afficher le container principal
-            document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('main-container').style.display = 'block';
-            
-            // Générer les cœurs animés
-            generateHearts();
-            
-            // Positionner le bouton NON initialement à côté du OUI
-            positionNoButton();
+            // Initialisation Position Bouton NON (à côté du OUI au départ)
+            setTimeout(() => {
+                const yesRect = yesBtn.getBoundingClientRect();
+                noBtn.style.left = (yesRect.right + 20) + 'px';
+                noBtn.style.top = yesRect.top + 'px';
+            }, 100);
+
+            generateHearts(); // Lancer l'animation de fond
+        } else {
+            // MODE CRÉATEUR : Pas de paramètres, on affiche la config
+            setupScreen.style.display = 'flex';
+        }
+
+        // --- GÉNÉRATION DU LIEN ---
+        document.getElementById('generate-btn').addEventListener('click', () => {
+            const nameVal = document.getElementById('target-name').value.trim();
+            const genderVal = document.getElementById('target-gender').value;
+
+            if (!nameVal) { alert("Mets un prénom !"); return; }
+
+            // Création de l'URL propre
+            const baseUrl = window.location.href.split('?')[0];
+            const finalUrl = `${baseUrl}?name=${encodeURIComponent(nameVal)}&gender=${genderVal}`;
+
+            document.getElementById('share-url').textContent = finalUrl;
+            document.getElementById('share-link-container').style.display = 'flex';
         });
 
-        // --- Génération des cœurs en arrière-plan ---
+        function copyLink() {
+            const urlText = document.getElementById('share-url').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                alert("Lien copié ! Envoie-le à ton date 🚀");
+            });
+        }
+
+        // --- MOTEUR PHYSIQUE DU BOUTON NON ---
+        function moveButton(e) {
+            // Empêche le clic sur mobile
+            if(e.type === 'touchstart') e.preventDefault(); 
+
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            // Marges de sécurité (pour ne pas coller aux bords)
+            const padding = 20;
+            
+            // Calculer l'espace disponible (Viewport - taille bouton - marge)
+            const maxW = window.innerWidth - btnWidth - padding;
+            const maxH = window.innerHeight - btnHeight - padding;
+
+            // Générer nouvelle position aléatoire dans la zone visible
+            // Math.max(padding, ...) assure qu'on ne sort pas à gauche/haut
+            // Math.min(maxW, ...) assure qu'on ne sort pas à droite/bas
+            const newX = Math.max(padding, Math.random() * maxW);
+            const newY = Math.max(padding, Math.random() * maxH);
+
+            noBtn.style.left = newX + "px";
+            noBtn.style.top = newY + "px";
+        }
+
+        // Déclencheurs de fuite
+        noBtn.addEventListener('mouseover', moveButton); // Pour souris (PC)
+        noBtn.addEventListener('touchstart', moveButton); // Pour tactile (Mobile)
+        noBtn.addEventListener('click', moveButton); // Sécurité supplémentaire
+
+        // --- BOUTON OUI ---
+        yesBtn.addEventListener('click', () => {
+            mainContainer.style.display = 'none';
+            document.getElementById('success-message').style.display = 'flex';
+            
+            const isFemale = genderParam !== 'M';
+            document.getElementById('success-text').textContent = 
+                `Je savais que tu dirais oui ! ❤️`;
+        });
+
+        // --- DÉCORATION ---
         function generateHearts() {
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.className = 'bg-heart';
                     heart.textContent = '❤️';
                     heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+                    heart.style.animationDuration = (4 + Math.random() * 6) + 's';
                     document.body.appendChild(heart);
-                    
-                    setTimeout(() => heart.remove(), parseFloat(heart.style.animationDuration) * 1000);
-                }, i * 500);
+                }, i * 300);
             }
         }
-
-        // --- Positionner le bouton NON initialement à côté du OUI ---
-        function positionNoButton() {
-            const yesBtn = document.getElementById('yesBtn');
-            const noBtn = document.getElementById('noBtn');
-            const yesRect = yesBtn.getBoundingClientRect();
-            
-            // Placer le NON à droite du OUI avec un petit espace
-            noBtn.style.left = (yesRect.right + 30) + 'px';
-            noBtn.style.top = yesRect.top + 'px';
-        }
-
-        // --- Bouton OUI ---
-        document.getElementById('yesBtn').addEventListener('click', () => {
-            document.getElementById('main-container').style.display = 'none';
-            const successMessage = document.getElementById('success-message');
-            const genderText = userGender === 'valentin' ? 'Valentin' : 'Valentine';
-            document.getElementById('success-text').textContent = `Je savais que tu accepterais d'être ${genderText === 'Valentin' ? 'mon ' + genderText : 'ma ' + genderText} ! ❤️`;
-            successMessage.style.display = 'flex';
-        });
-
-        // --- Bouton NON (fuit la souris tout en restant sur l'écran) ---
-        const noBtn = document.getElementById('noBtn');
-        
-        function moveButton(e) {
-            const btn = noBtn;
-            const btnRect = btn.getBoundingClientRect();
-            const btnWidth = btnRect.width;
-            const btnHeight = btnRect.height;
-            
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            // Calculer la distance entre la souris et le bouton
-            const btnCenterX = btnRect.left + btnWidth / 2;
-            const btnCenterY = btnRect.top + btnHeight / 2;
-            const distance = Math.sqrt(Math.pow(mouseX - btnCenterX, 2) + Math.pow(mouseY - btnCenterY, 2));
-            
-            // Si la souris est proche (moins de 100px), déplacer le bouton
-            if (distance < 100) {
-                // Calculer une nouvelle position aléatoire
-                const padding = 40; // Marge de sécurité pour rester sur l'écran
-                const maxX = window.innerWidth - btnWidth - padding;
-                const maxY = window.innerHeight - btnHeight - padding;
-                
-                let newX, newY;
-                let attempts = 0;
-                
-                // Essayer de trouver une position éloignée de la souris
-                do {
-                    newX = Math.random() * maxX + padding;
-                    newY = Math.random() * maxY + padding;
-                    const newDistance = Math.sqrt(Math.pow(mouseX - newX, 2) + Math.pow(mouseY - newY, 2));
-                    
-                    if (newDistance > 200 || attempts > 10) {
-                        break;
-                    }
-                    attempts++;
-                } while (true);
-                
-                // S'assurer que les coordonnées restent dans les limites
-                newX = Math.max(padding, Math.min(newX, maxX));
-                newY = Math.max(padding, Math.min(newY, maxY));
-                
-                btn.style.left = newX + 'px';
-                btn.style.top = newY + 'px';
-            }
-        }
-        
-        noBtn.addEventListener('mousemove', moveButton);
-        noBtn.addEventListener('mouseenter', moveButton);
-        
-        // Également déplacer le bouton lors du mouvement général de la souris
-        document.addEventListener('mousemove', (e) => {
-            if (document.getElementById('main-container').style.display === 'block') {
-                moveButton(e);
-            }
-        });
     </script>
 </body>
 </html>

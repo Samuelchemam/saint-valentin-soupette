@@ -2,33 +2,24 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>Une question pour toi...</title>
+    <title>Une question...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         /* --- Styles Généraux --- */
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
             height: 100vh;
             background: radial-gradient(circle at center, #f6e6f0, #ffc1e3);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            color: #333;
+            overflow: hidden; color: #333;
         }
 
-        /* --- Animation Cœurs --- */
+        /* --- Animation Arrière-plan --- */
         .bg-heart {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 2rem;
-            animation: floatUp linear infinite;
-            z-index: 0;
-            pointer-events: none;
+            position: absolute; color: rgba(255, 255, 255, 0.6);
+            font-size: 2rem; animation: floatUp linear infinite; z-index: 0; pointer-events: none;
         }
-
         @keyframes floatUp {
             0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
             50% { opacity: 1; }
@@ -37,107 +28,107 @@
 
         /* --- 1. Écran de Configuration (ADMIN) --- */
         #setup-screen {
-            display: flex;
-            flex-direction: column;
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            z-index: 200;
-            max-width: 450px;
-            width: 90%;
-            text-align: left;
+            display: flex; flex-direction: column;
+            background: white; padding: 2rem; border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 200;
+            width: 90%; max-width: 400px;
+        }
+        #setup-screen h2 { margin-top: 0; color: #d946a6; text-align: center; margin-bottom: 1.5rem; }
+
+        /* Onglets de sélection */
+        .mode-toggle {
+            display: flex; gap: 10px; margin-bottom: 1.5rem; justify-content: center;
+        }
+        .mode-btn {
+            flex: 1; padding: 10px; border: 2px solid #ffc1e3; border-radius: 10px;
+            background: transparent; cursor: pointer; font-weight: bold; color: #888;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background: #d946a6; color: white; border-color: #d946a6;
         }
 
-        #setup-screen h2 { margin-top: 0; color: #d946a6; text-align: center; }
-        .input-group { width: 100%; margin-bottom: 1rem; }
-        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
+        /* Formulaires */
+        .form-section { display: none; animation: fadeIn 0.3s; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #555; }
         .input-group input, .input-group select {
             width: 100%; padding: 0.8rem; border: 2px solid #ffc1e3; border-radius: 8px; box-sizing: border-box;
         }
 
-        .option-container { display: none; border-top: 1px solid #eee; padding-top: 1rem; margin-top: 1rem; }
-        .option-container.active { display: block; animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         #generate-btn {
-            margin-top: 1.5rem; padding: 1rem; background: #333; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.3s;
+            width: 100%; padding: 1rem; background: #333; color: white; border: none; border-radius: 10px;
+            font-weight: bold; cursor: pointer; margin-top: 1rem; font-size: 1rem;
         }
-        #generate-btn:hover { background: #555; }
+        #share-section {
+            margin-top: 1rem; background: #f9f9f9; padding: 10px; border-radius: 8px; text-align: center; display: none;
+        }
+        #share-url { font-size: 0.75rem; word-break: break-all; display: block; margin-bottom: 5px; color: #555; }
+        .copy-btn { background: #d946a6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
 
-        #share-section { margin-top: 1.5rem; display: none; background: #f9f9f9; padding: 1rem; border-radius: 8px; text-align: center; }
-        #share-url { font-size: 0.8rem; word-break: break-all; color: #666; margin-bottom: 10px; display: block; }
-        .copy-btn { background: #d946a6; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        /* --- 2. Interface Destinataire (DEMANDE) --- */
+        /* --- 2. Interface Destinataire (FIXE) --- */
         .container {
-            display: none;
-            text-align: center;
-            z-index: 10;
+            display: none; text-align: center; z-index: 10;
             background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 20px;
+            padding: 2rem; border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             position: relative;
-            max-width: 90%;
+            /* TAILLE FIXE POUR STABILITÉ */
+            width: 90%; max-width: 450px; min-height: 350px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        .container h1 { margin-top: 0; color: #d946a6; font-size: 1.8rem; margin-bottom: 2rem; }
-        
+        .container h1 {
+            color: #d946a6; font-size: 1.8rem; line-height: 1.4; margin-bottom: 3rem; width: 100%;
+        }
+
         .button-container {
-            display: flex; gap: 20px; justify-content: center; align-items: center; min-height: 60px;
+            display: flex; gap: 30px; justify-content: center; align-items: center;
+            width: 100%; height: 60px; /* Hauteur réservée pour éviter le saut */
+            position: relative;
         }
 
         .btn {
-            padding: 1rem 2rem; font-size: 1.1rem; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-width: 100px;
+            padding: 1rem 2.5rem; font-size: 1.1rem; border: none; border-radius: 50px;
+            cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s; white-space: nowrap;
         }
 
         #yesBtn { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; z-index: 20; }
         #yesBtn:hover { transform: scale(1.05); }
 
         #noBtn {
-            background: linear-gradient(135deg, #eb3349, #f45c43); color: white; position: fixed; z-index: 30; transition: top 0.2s ease-out, left 0.2s ease-out;
+            background: linear-gradient(135deg, #eb3349, #f45c43); color: white; z-index: 30;
+            /* Positionnement initial : STATIQUE (dans le flux) */
+            position: static; 
+            transition: top 0.2s ease-out, left 0.2s ease-out;
         }
+        /* Classe ajoutée JS pour faire flotter le bouton */
+        #noBtn.floating { position: fixed; }
 
-        /* --- 3. POPUP (Motivation) --- */
+        /* --- 3. Popup & Succès --- */
         .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000;
+            justify-content: center; align-items: center;
         }
-        .popup-overlay.visible { display: flex; animation: popIn 0.3s ease-out; }
-
+        .popup-overlay.visible { display: flex; animation: popIn 0.3s; }
         .popup-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 300px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            background: white; padding: 2rem; border-radius: 15px; text-align: center; max-width: 280px;
         }
-        .popup-content h3 { color: #d946a6; margin-top: 0; font-size: 1.5rem; }
-        .popup-content p { color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; }
         .popup-btn {
-            background: #d946a6; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 20px; cursor: pointer; font-weight: bold; transition: transform 0.2s;
+            background: #d946a6; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 20px; cursor: pointer; margin-top: 1rem;
         }
-        .popup-btn:hover { transform: scale(1.05); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- 4. Message Succès --- */
         .success-message {
-            display: none; flex-direction: column; align-items: center; z-index: 100; background: white; padding: 2rem; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15); max-width: 90%;
+            display: none; flex-direction: column; align-items: center; z-index: 100;
+            background: white; padding: 2rem; border-radius: 20px; text-align: center; width: 90%; max-width: 450px;
         }
-        .success-message h1 { color: #56ab2f; margin-bottom: 10px; }
-        .heart-icon { font-size: 4rem; animation: heartbeat 1.5s infinite; margin-bottom: 1rem; }
+        .heart-icon { font-size: 4rem; animation: heartbeat 1.5s infinite; }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } }
 
     </style>
@@ -145,18 +136,16 @@
 <body>
 
     <div id="setup-screen">
-        <h2>⚙️ Configurer la demande</h2>
-        <div class="input-group">
-            <label>Type de question :</label>
-            <select id="mode-selector">
-                <option value="valentine">Saint-Valentin (Automatique)</option>
-                <option value="custom">Question Personnalisée (Libre)</option>
-            </select>
+        <h2>⚙️ Configuration</h2>
+        
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="switchMode('valentine')">❤️ St-Valentin</button>
+            <button class="mode-btn" onclick="switchMode('custom')">✏️ Autre</button>
         </div>
 
-        <div id="opt-valentine" class="option-container active">
+        <div id="form-valentine" class="form-section active">
             <div class="input-group">
-                <label>Son prénom :</label>
+                <label>Prénom :</label>
                 <input type="text" id="val-name" placeholder="Ex: Sarah" />
             </div>
             <div class="input-group">
@@ -168,21 +157,22 @@
             </div>
         </div>
 
-        <div id="opt-custom" class="option-container">
+        <div id="form-custom" class="form-section">
             <div class="input-group">
-                <label>Ta question exacte :</label>
-                <input type="text" id="cust-question" placeholder="Ex: On va manger des sushis ?" />
+                <label>Question :</label>
+                <input type="text" id="cust-question" placeholder="Ex: Resto ce soir ?" />
             </div>
             <div class="input-group">
-                <label>Message si OUI :</label>
-                <input type="text" id="cust-success" placeholder="Ex: Parfait, je commande ! ❤️" />
+                <label>Message Succès :</label>
+                <input type="text" id="cust-success" placeholder="Ex: Trop bien !" />
             </div>
         </div>
 
-        <button id="generate-btn">Créer le lien</button>
+        <button id="generate-btn">Générer le lien</button>
+        
         <div id="share-section">
             <span id="share-url"></span>
-            <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
+            <button class="copy-btn" onclick="copyLink()">Copier</button>
         </div>
     </div>
 
@@ -196,132 +186,130 @@
 
     <div id="popup-overlay" class="popup-overlay">
         <div class="popup-content">
-            <h3>Oups ! 🤭</h3>
-            <p>Allez... tu sais que tu as envie de dire OUI ! 😏</p>
-            <button class="popup-btn" id="close-popup">C'est vrai...</button>
+            <h3 style="color:#d946a6; margin:0 0 10px 0;">Oups ! 🤭</h3>
+            <p style="color:#555; margin:0;">Allez... tu sais que tu veux dire OUI ! 😏</p>
+            <button class="popup-btn" onclick="closePopup()">D'accord...</button>
         </div>
     </div>
 
-    <div class="success-message" id="success-message">
+    <div id="success-message" class="success-message">
         <div class="heart-icon">❤️</div>
-        <h1>Yesss !</h1>
-        <p id="success-text"></p>
+        <h1 style="color:#56ab2f;">Yaaay !</h1>
+        <p id="success-text" style="color:#555; font-size:1.2rem;"></p>
     </div>
 
     <script>
-        // --- LOGIQUE ADMIN / USER ---
+        // --- GESTION DES PARAMETRES URL ---
         const urlParams = new URLSearchParams(window.location.search);
         const qParam = urlParams.get('q');
         const rParam = urlParams.get('r');
 
         const setupScreen = document.getElementById('setup-screen');
         const mainContainer = document.getElementById('main-container');
-        const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
-        const popup = document.getElementById('popup-overlay');
+        const yesBtn = document.getElementById('yesBtn');
 
-        // Toggle Admin
-        const modeSelector = document.getElementById('mode-selector');
-        const optValentine = document.getElementById('opt-valentine');
-        const optCustom = document.getElementById('opt-custom');
-
-        modeSelector.addEventListener('change', (e) => {
-            if(e.target.value === 'valentine') {
-                optValentine.classList.add('active');
-                optCustom.classList.remove('active');
-            } else {
-                optValentine.classList.remove('active');
-                optCustom.classList.add('active');
-            }
-        });
-
-        // Affichage Interface
+        // Mode Destinataire
         if (qParam && rParam) {
             setupScreen.style.display = 'none';
-            mainContainer.style.display = 'block';
+            mainContainer.style.display = 'flex'; // Flex pour centrer le contenu
             document.getElementById('proposal-text').textContent = decodeURIComponent(qParam);
             document.getElementById('success-text').textContent = decodeURIComponent(rParam);
-
-            // Positionnement initial
-            setTimeout(() => {
-                const yesRect = yesBtn.getBoundingClientRect();
-                noBtn.style.left = (yesRect.right + 20) + 'px';
-                noBtn.style.top = yesRect.top + 'px';
-            }, 100);
             generateHearts();
-        } else {
+        } 
+        // Mode Admin
+        else {
             setupScreen.style.display = 'flex';
         }
 
-        // --- GÉNÉRATION LIEN ---
-        document.getElementById('generate-btn').addEventListener('click', () => {
-            const mode = modeSelector.value;
-            let question = "", reponse = "";
+        // --- GESTION SETUP ---
+        let currentMode = 'valentine';
 
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+            
             if (mode === 'valentine') {
+                document.querySelector('button[onclick="switchMode(\'valentine\')"]').classList.add('active');
+                document.getElementById('form-valentine').classList.add('active');
+            } else {
+                document.querySelector('button[onclick="switchMode(\'custom\')"]').classList.add('active');
+                document.getElementById('form-custom').classList.add('active');
+            }
+        }
+
+        document.getElementById('generate-btn').addEventListener('click', () => {
+            let q = "", r = "";
+            if (currentMode === 'valentine') {
                 const name = document.getElementById('val-name').value.trim();
                 const gender = document.getElementById('val-gender').value;
-                if (!name) { alert("Prénom manquant !"); return; }
+                if(!name) return alert("Prénom requis");
                 const role = gender === 'F' ? "ma Valentine" : "mon Valentin";
-                question = `${name}, veux-tu être ${role} ? 💖`;
-                reponse = `Je savais que tu dirais OUI ! ❤️`;
+                q = `${name}, veux-tu être ${role} ? 💖`;
+                r = "Je savais que tu dirais OUI ! ❤️";
             } else {
-                question = document.getElementById('cust-question').value.trim();
-                reponse = document.getElementById('cust-success').value.trim();
-                if (!question || !reponse) { alert("Remplis tout !"); return; }
+                q = document.getElementById('cust-question').value.trim();
+                r = document.getElementById('cust-success').value.trim();
+                if(!q || !r) return alert("Champs requis");
             }
-            const baseUrl = window.location.href.split('?')[0];
-            const finalUrl = `${baseUrl}?q=${encodeURIComponent(question)}&r=${encodeURIComponent(reponse)}`;
-            document.getElementById('share-url').textContent = finalUrl;
+            
+            const url = `${window.location.href.split('?')[0]}?q=${encodeURIComponent(q)}&r=${encodeURIComponent(r)}`;
+            document.getElementById('share-url').textContent = url;
             document.getElementById('share-section').style.display = 'block';
         });
 
         function copyLink() {
-            navigator.clipboard.writeText(document.getElementById('share-url').textContent)
-                .then(() => alert("Lien copié ! 🚀"));
+            navigator.clipboard.writeText(document.getElementById('share-url').textContent);
+            alert("Lien copié !");
         }
 
-        // --- MÉCANIQUE BOUTON NON + POPUP ---
-        let attemptCount = 0;
-        let scaleSize = 1;
+        // --- LOGIQUE BOUTON NON (ALIGNEMENT + FUITE) ---
+        let attempt = 0;
+        let isFloating = false; // Pour savoir si le bouton a quitté sa place initiale
 
-        function moveButton(e) {
-            if(e.type === 'touchstart') e.preventDefault(); 
+        function escapeButton(e) {
+            if(e.type === 'touchstart') e.preventDefault();
             
-            // Compteur & Gros OUI
-            attemptCount++;
-            scaleSize += 0.1;
-            yesBtn.style.transform = `scale(${scaleSize})`;
+            attempt++;
+            
+            // 1. Popup au 3ème essai
+            if(attempt === 3) document.getElementById('popup-overlay').classList.add('visible');
+            
+            // 2. Grossir le OUI
+            yesBtn.style.transform = `scale(${1 + attempt * 0.1})`;
 
-            // Trigger Popup au 3ème essai
-            if (attemptCount === 3) {
-                popup.classList.add('visible');
+            // 3. Passer en mode flottant (Fixed) si ce n'est pas déjà fait
+            if (!isFloating) {
+                isFloating = true;
+                noBtn.classList.add('floating');
+                // On ne calcule pas de position ici, on laisse le calcul aléatoire le placer directement ailleurs
+                // pour éviter qu'il ne "saute" visuellement sur place.
             }
 
-            // Déplacement bouton NON
-            const btnWidth = noBtn.offsetWidth;
-            const btnHeight = noBtn.offsetHeight;
-            const padding = 20;
-            const maxW = window.innerWidth - btnWidth - padding;
-            const maxH = window.innerHeight - btnHeight - padding;
-            
-            const newX = Math.max(padding, Math.random() * maxW);
-            const newY = Math.max(padding, Math.random() * maxH);
-            
+            // 4. Calcul nouvelle position (Zone sécurisée)
+            const btnW = noBtn.offsetWidth;
+            const btnH = noBtn.offsetHeight;
+            const pad = 20;
+            const maxW = window.innerWidth - btnW - pad;
+            const maxH = window.innerHeight - btnH - pad;
+
+            const newX = Math.max(pad, Math.random() * maxW);
+            const newY = Math.max(pad, Math.random() * maxH);
+
             noBtn.style.left = newX + "px";
             noBtn.style.top = newY + "px";
         }
 
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton);
-        noBtn.addEventListener('click', moveButton);
+        noBtn.addEventListener('mouseover', escapeButton);
+        noBtn.addEventListener('touchstart', escapeButton);
+        noBtn.addEventListener('click', escapeButton);
 
-        // Fermeture Popup
-        document.getElementById('close-popup').addEventListener('click', () => {
-            popup.classList.remove('visible');
-        });
+        // --- ACTIONS FINALES ---
+        function closePopup() {
+            document.getElementById('popup-overlay').classList.remove('visible');
+        }
 
-        // --- SUCCESS ---
         yesBtn.addEventListener('click', () => {
             mainContainer.style.display = 'none';
             document.getElementById('success-message').style.display = 'flex';
@@ -329,15 +317,14 @@
 
         // --- BACKGROUND ---
         function generateHearts() {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'bg-heart';
-                    heart.textContent = '❤️';
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (4 + Math.random() * 6) + 's';
-                    document.body.appendChild(heart);
-                }, i * 300);
+                    const h = document.createElement('div');
+                    h.className = 'bg-heart'; h.textContent = '❤️';
+                    h.style.left = Math.random() * 100 + 'vw';
+                    h.style.animationDuration = (4 + Math.random() * 6) + 's';
+                    document.body.appendChild(h);
+                }, i * 400);
             }
         }
     </script>

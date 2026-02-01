@@ -1,274 +1,364 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Demande Valentin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    /* --- Styles Généraux --- */
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: radial-gradient(circle at center, #ffe6f0, #ffc1e3);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow: hidden;
-      color: #333;
-    }
+    <meta charset="UTF-8" />
+    <title>Demande Valentin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        /* --- Styles Généraux --- */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle at center, #f6e6f0, #ffc1e3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: #333;
+        }
 
-    /* --- Cœurs en arrière-plan (Effet visuel) --- */
-    .bg-heart {
-      position: absolute;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 2rem;
-      animation: floatUp linear infinite;
-      z-index: 0;
-      pointer-events: none;
-    }
+        /* --- Cœurs en arrière-plan (Effet visuel) --- */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 2rem;
+            animation: floatUp linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    @keyframes floatUp {
-      0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-    }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
 
-    /* --- Conteneurs --- */
-    .screen {
-      text-align: center;
-      position: relative;
-      z-index: 2;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      display: none; /* Masqué par défaut */
-      max-width: 90%;
-      width: 400px;
-      backdrop-filter: blur(5px);
-    }
+        /* --- Écran de Configuration --- */
+        #setup-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            z-index: 100;
+            max-width: 400px;
+            text-align: center;
+        }
 
-    /* Afficher l'écran actif */
-    .screen.active {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: popIn 0.5s ease;
-    }
+        #setup-screen h2 {
+            margin-top: 0;
+            color: #d946a6;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
 
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+        .input-group {
+            width: 100%;
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
 
-    h1 {
-      color: #d32f2f;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-    }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
 
-    /* --- Inputs & Boutons --- */
-    input[type="text"] {
-      padding: 12px;
-      width: 80%;
-      border: 2px solid #ff4081;
-      border-radius: 8px;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      outline: none;
-      text-align: center;
-    }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ffc1e3;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
 
-    .buttons {
-      display: flex;
-      gap: 20px;
-      margin-top: 1rem;
-    }
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #d946a6;
+            outline: none;
+        }
 
-    button {
-      padding: 12px 25px;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: bold;
-    }
+        #start-btn {
+            margin-top: 1rem;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
 
-    /* Bouton Configuration */
-    .btn-start {
-      background-color: #333;
-      color: white;
-    }
-    .btn-start:hover { background-color: #000; transform: scale(1.05); }
+        #start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
 
-    /* Bouton OUI */
-    #btn-yes {
-      background-color: #ff4081;
-      color: white;
-      box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
-      animation: pulse 1.5s infinite;
-    }
-    #btn-yes:hover {
-      transform: scale(1.1);
-      background-color: #f50057;
-    }
+        /* --- Container principal (après configuration) --- */
+        .container {
+            display: none;
+            text-align: center;
+            z-index: 10;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+        }
 
-    /* Animation Battement de cœur */
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 64, 129, 0.6); }
-      100% { transform: scale(1); }
-    }
+        .container h1 {
+            margin-top: 0;
+            color: #d946a6;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
 
-    /* Bouton NON */
-    #btn-no {
-      background-color: #fff;
-      color: #ff4081;
-      border: 2px solid #ff4081;
-      position: relative; /* Pour le mouvement */
-    }
+        .button-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-    /* --- Écran Succès --- */
-    #success-screen img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
 
-    /* --- Confetti --- */
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      top: -10px;
-      z-index: 10;
-      animation: fall linear forwards;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-    }
+        #yesBtn {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+        }
 
-  </style>
+        #yesBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(86, 171, 47, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #eb3349, #f45c43);
+            color: white;
+            position: fixed;
+            z-index: 1000;
+        }
+
+        /* --- Message de Succès --- */
+        .success-message {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .success-message h1 {
+            color: #56ab2f;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-message p {
+            font-size: 1.3rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .heart-icon {
+            font-size: 4rem;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.1); }
+            20%, 40% { transform: scale(1.15); }
+        }
+    </style>
 </head>
 <body>
-
-  <div id="setup-screen" class="screen active">
-    <h1>Configuration ⚙️</h1>
-    <p>Qui est l'heureux(se) élu(e) ?</p>
-    <input type="text" id="name-input" placeholder="Entrez le prénom ici..." />
-    <button class="btn-start" onclick="startProposal()">Générer la demande</button>
-  </div>
-
-  <div id="proposal-screen" class="screen">
-    <h1 id="proposal-text">Veux-tu être mon Valentin ?</h1>
-    <div class="buttons">
-      <button id="btn-yes">OUI ❤️</button>
-      <button id="btn-no">NON</button>
+    <!-- Écran de configuration -->
+    <div id="setup-screen">
+        <h2>💕 Configuration 💕</h2>
+        <div class="input-group">
+            <label for="name-input">Ton prénom :</label>
+            <input type="text" id="name-input" placeholder="Ex: Sarah" />
+        </div>
+        <div class="input-group">
+            <label for="gender-input">Genre :</label>
+            <select id="gender-input">
+                <option value="valentin">Valentin</option>
+                <option value="valentine">Valentine</option>
+            </select>
+        </div>
+        <button id="start-btn">Démarrer</button>
     </div>
-  </div>
 
-  <div id="success-screen" class="screen">
-    <h1>Wouhou ! ❤️</h1>
-    <p>Rendez-vous le 14 février !</p>
-    <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif" alt="Célébration"/>
-  </div>
+    <!-- Container principal -->
+    <div class="container" id="main-container">
+        <h1 id="proposal-text">Veux-tu être ma Valentine ? 💖</h1>
+        <div class="button-container">
+            <button class="btn" id="yesBtn">OUI</button>
+            <button class="btn" id="noBtn">NON</button>
+        </div>
+    </div>
 
-  <script>
-    /* --- Variables DOM --- */
-    const setupScreen = document.getElementById('setup-screen');
-    const proposalScreen = document.getElementById('proposal-screen');
-    const successScreen = document.getElementById('success-screen');
-    const nameInput = document.getElementById('name-input');
-    const proposalText = document.getElementById('proposal-text');
-    
-    const btnNo = document.getElementById('btn-no');
-    const btnYes = document.getElementById('btn-yes');
+    <!-- Message de succès -->
+    <div class="success-message" id="success-message">
+        <div class="heart-icon">❤️</div>
+        <h1>Yaaay ! 🎉</h1>
+        <p id="success-text">Je savais que tu dirais oui ! ❤️</p>
+    </div>
 
-    /* --- 1. Lancer la demande --- */
-    function startProposal() {
-      const name = nameInput.value.trim();
-      if (!name) {
-        alert("Merci d'entrer un prénom !");
-        return;
-      }
-      
-      // Mise à jour du texte
-      proposalText.innerHTML = `${name}, veux-tu être mon Valentin&nbsp;?`;
-      
-      // Changement d'écran
-      setupScreen.classList.remove('active');
-      proposalScreen.classList.add('active');
-      
-      // Démarrer les cœurs en fond
-      startBackgroundHearts();
-    }
+    <script>
+        let userName = "";
+        let userGender = "valentine";
 
-    /* --- 2. Logique du bouton fuyant --- */
-    function moveButton() {
-      // On passe le bouton en position fixed pour qu'il puisse sortir du conteneur "screen"
-      btnNo.style.position = 'fixed'; 
-      
-      const width = btnNo.offsetWidth;
-      const height = btnNo.offsetHeight;
-      const padding = 50; // Marge de sécurité
+        // --- Démarrage après configuration ---
+        document.getElementById('start-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('name-input').value.trim();
+            const genderInput = document.getElementById('gender-input').value;
+            
+            if (!nameInput) {
+                alert('Merci de saisir un prénom !');
+                return;
+            }
+            
+            userName = nameInput;
+            userGender = genderInput;
+            
+            // Mise à jour du texte selon le genre
+            const genderText = userGender === 'valentin' ? 'mon Valentin' : 'ma Valentine';
+            document.getElementById('proposal-text').textContent = `${userName}, veux-tu être ${genderText} ? 💖`;
+            
+            // Masquer l'écran de config, afficher le container principal
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-container').style.display = 'block';
+            
+            // Générer les cœurs animés
+            generateHearts();
+            
+            // Positionner le bouton NON initialement à côté du OUI
+            positionNoButton();
+        });
 
-      // Calcul de nouvelles coordonnées aléatoires dans la fenêtre
-      const maxX = window.innerWidth - width - padding;
-      const maxY = window.innerHeight - height - padding;
+        // --- Génération des cœurs en arrière-plan ---
+        function generateHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'bg-heart';
+                    heart.textContent = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), parseFloat(heart.style.animationDuration) * 1000);
+                }, i * 500);
+            }
+        }
 
-      const newX = Math.random() * (maxX - padding) + padding;
-      const newY = Math.random() * (maxY - padding) + padding;
+        // --- Positionner le bouton NON initialement à côté du OUI ---
+        function positionNoButton() {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const yesRect = yesBtn.getBoundingClientRect();
+            
+            // Placer le NON à droite du OUI avec un petit espace
+            noBtn.style.left = (yesRect.right + 30) + 'px';
+            noBtn.style.top = yesRect.top + 'px';
+        }
 
-      btnNo.style.left = `${newX}px`;
-      btnNo.style.top = `${newY}px`;
-    }
+        // --- Bouton OUI ---
+        document.getElementById('yesBtn').addEventListener('click', () => {
+            document.getElementById('main-container').style.display = 'none';
+            const successMessage = document.getElementById('success-message');
+            const genderText = userGender === 'valentin' ? 'Valentin' : 'Valentine';
+            document.getElementById('success-text').textContent = `Je savais que tu accepterais d'être ${genderText === 'Valentin' ? 'mon ' + genderText : 'ma ' + genderText} ! ❤️`;
+            successMessage.style.display = 'flex';
+        });
 
-    // Déclencheurs de fuite
-    btnNo.addEventListener('mouseover', moveButton);
-    btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
-    btnNo.addEventListener('click', (e) => { e.preventDefault(); moveButton(); }); // Au cas où on clique trop vite
-
-    /* --- 3. Logique du OUI --- */
-    btnYes.addEventListener('click', () => {
-      proposalScreen.classList.remove('active');
-      successScreen.classList.add('active');
-      launchConfetti();
-    });
-
-    /* --- 4. Effets Visuels (Cœurs de fond) --- */
-    function startBackgroundHearts() {
-      setInterval(() => {
-        const heart = document.createElement('div');
-        heart.classList.add('bg-heart');
-        heart.innerHTML = '❤️';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = (Math.random() * 3 + 3) + 's'; // Vitesse aléatoire
-        heart.style.fontSize = (Math.random() * 20 + 10) + 'px'; // Taille aléatoire
-        document.body.appendChild(heart);
+        // --- Bouton NON (fuit la souris tout en restant sur l'écran) ---
+        const noBtn = document.getElementById('noBtn');
         
-        // Nettoyage après l'animation
-        setTimeout(() => heart.remove(), 6000);
-      }, 500); // Un cœur toutes les 500ms
-    }
-
-    /* --- 5. Effets Confetti (Succès) --- */
-    function launchConfetti() {
-      const colors = ['#ff4081', '#ffeb3b', '#4caf50', '#2196f3', '#ff9800'];
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDuration = Math.random() * 2 + 1.5 + 's';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 4000);
-      }
-    }
-  </script>
+        function moveButton(e) {
+            const btn = noBtn;
+            const btnRect = btn.getBoundingClientRect();
+            const btnWidth = btnRect.width;
+            const btnHeight = btnRect.height;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            // Calculer la distance entre la souris et le bouton
+            const btnCenterX = btnRect.left + btnWidth / 2;
+            const btnCenterY = btnRect.top + btnHeight / 2;
+            const distance = Math.sqrt(Math.pow(mouseX - btnCenterX, 2) + Math.pow(mouseY - btnCenterY, 2));
+            
+            // Si la souris est proche (moins de 100px), déplacer le bouton
+            if (distance < 100) {
+                // Calculer une nouvelle position aléatoire
+                const padding = 40; // Marge de sécurité pour rester sur l'écran
+                const maxX = window.innerWidth - btnWidth - padding;
+                const maxY = window.innerHeight - btnHeight - padding;
+                
+                let newX, newY;
+                let attempts = 0;
+                
+                // Essayer de trouver une position éloignée de la souris
+                do {
+                    newX = Math.random() * maxX + padding;
+                    newY = Math.random() * maxY + padding;
+                    const newDistance = Math.sqrt(Math.pow(mouseX - newX, 2) + Math.pow(mouseY - newY, 2));
+                    
+                    if (newDistance > 200 || attempts > 10) {
+                        break;
+                    }
+                    attempts++;
+                } while (true);
+                
+                // S'assurer que les coordonnées restent dans les limites
+                newX = Math.max(padding, Math.min(newX, maxX));
+                newY = Math.max(padding, Math.min(newY, maxY));
+                
+                btn.style.left = newX + 'px';
+                btn.style.top = newY + 'px';
+            }
+        }
+        
+        noBtn.addEventListener('mousemove', moveButton);
+        noBtn.addEventListener('mouseenter', moveButton);
+        
+        // Également déplacer le bouton lors du mouvement général de la souris
+        document.addEventListener('mousemove', (e) => {
+            if (document.getElementById('main-container').style.display === 'block') {
+                moveButton(e);
+            }
+        });
+    </script>
 </body>
 </html>

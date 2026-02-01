@@ -10,8 +10,8 @@
         :root {
             --primary: #d946a6;
             --success: #56ab2f;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 32px 0 rgba(217, 70, 166, 0.15);
+            --glass: rgba(255, 255, 255, 0.95);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
         body {
@@ -22,9 +22,10 @@
             font-family: 'Nunito', sans-serif;
             overflow: hidden; 
             -webkit-tap-highlight-color: transparent;
+            position: relative; /* Important pour le positionnement */
         }
 
-        /* --- BACKGROUND ANIMATION --- */
+        /* --- BACKGROUND --- */
         .bg-heart {
             position: absolute; color: rgba(255, 255, 255, 0.6);
             font-size: 2rem; animation: floatUp linear infinite; z-index: 0; 
@@ -36,49 +37,68 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- CONTAINERS --- */
+        /* --- CARTE CENTRALE --- */
         .glass-panel {
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 2rem; border-radius: 24px;
+            padding: 2.5rem 2rem; border-radius: 24px;
             box-shadow: var(--shadow);
             width: 85%; max-width: 400px;
-            text-align: center; z-index: 10;
+            text-align: center; 
+            z-index: 10;
+            position: relative;
         }
 
-        h1 { font-family: 'Pacifico', cursive; color: var(--primary); font-size: 1.8rem; margin-bottom: 2rem; }
+        h1 { font-family: 'Pacifico', cursive; color: var(--primary); font-size: 2rem; margin-bottom: 2rem; line-height: 1.2; }
         h2 { color: var(--primary); margin-top: 0; font-size: 1.4rem; }
 
-        /* --- SETUP --- */
+        /* --- SETUP (ADMIN) --- */
         .mode-toggle { display: flex; background: #eee; padding: 4px; border-radius: 12px; margin-bottom: 1.5rem; }
-        .mode-btn { flex: 1; padding: 8px; border: none; border-radius: 9px; cursor: pointer; font-weight: 700; background: transparent; color: #777; transition: 0.2s; }
+        .mode-btn { flex: 1; padding: 10px; border: none; border-radius: 9px; cursor: pointer; font-weight: 700; background: transparent; color: #777; }
         .mode-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .form-section { display: none; text-align: left; animation: fadeIn 0.3s; }
-        .form-section.active { display: block; }
+        
+        .form-section { display: none; text-align: left; }
+        .form-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .input-group { margin-bottom: 1rem; }
-        .input-group label { display: block; margin-bottom: 0.3rem; font-weight: 700; font-size: 0.85rem; }
-        .input-group input, .input-group select { width: 100%; padding: 10px; border: 2px solid #ffdeeb; border-radius: 10px; box-sizing: border-box; font-family: inherit; }
+        .input-group label { display: block; margin-bottom: 0.3rem; font-weight: 700; font-size: 0.9rem; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 2px solid #ffdeeb; border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
 
-        #generate-btn { width: 100%; padding: 12px; background: #333; color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-        #share-section { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; display: none; }
-        #share-url { font-size: 0.75rem; background: #f9f9f9; padding: 8px; border-radius: 5px; word-break: break-all; display: block; margin-bottom: 8px; }
+        #generate-btn { width: 100%; padding: 14px; background: #333; color: white; border: none; border-radius: 12px; font-weight: 800; font-size:1.1rem; cursor: pointer; margin-top: 10px; }
+        #share-section { margin-top: 1.5rem; display: none; border-top: 1px solid #ddd; padding-top: 1rem; }
+        #share-url { font-size: 0.8rem; background: #f5f5f5; padding: 10px; border-radius: 8px; word-break: break-all; display: block; margin-bottom: 10px; color:#555; }
 
-        /* --- BUTTONS --- */
-        .button-container { display: flex; gap: 15px; justify-content: center; align-items: center; height: 80px; margin-top: 1rem; }
-        .btn { padding: 0.8rem 1.8rem; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; font-weight: 800; transition: transform 0.2s; font-family: 'Nunito', sans-serif; }
-        #yesBtn { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; }
-        #noBtn { background: linear-gradient(135deg, #eb3349, #f45c43); color: white; transition: left 0.2s ease-out, top 0.2s ease-out; }
+        /* --- BOUTONS OUI / NON --- */
+        .button-container { 
+            display: flex; gap: 20px; justify-content: center; align-items: center; 
+            height: 80px; margin-top: 2rem; 
+        }
+        
+        .btn { 
+            padding: 1rem 2rem; font-size: 1.2rem; border: none; border-radius: 50px; 
+            cursor: pointer; font-weight: 800; transition: transform 0.2s; 
+            font-family: 'Nunito', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #yesBtn { 
+            background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; 
+            z-index: 20; /* Z-index normal */
+            position: relative;
+        }
+        
+        #noBtn { 
+            background: linear-gradient(135deg, #eb3349, #f45c43); color: white; 
+            /* Transition fluide pour le mouvement */
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+        }
 
         /* --- POPUP & SUCCESS --- */
-        .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99999; justify-content: center; align-items: center; }
         .popup-overlay.visible { display: flex; }
-        .popup-content { background: white; padding: 1.5rem; border-radius: 20px; text-align: center; width: 260px; }
+        .popup-content { background: white; padding: 1.5rem; border-radius: 20px; text-align: center; width: 280px; }
+        
         .success-message { display: none; flex-direction: column; align-items: center; }
-        .heart-icon { font-size: 4rem; animation: heartbeat 1.2s infinite; }
+        .heart-icon { font-size: 5rem; animation: heartbeat 1.2s infinite; }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
         #toast { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 8px; z-index: 2000; }
@@ -90,26 +110,29 @@
 <body>
 
     <div id="setup-screen" class="glass-panel">
-        <h2>⚙️ Configuration</h2>
+        <h2>⚙️ Créer ma demande</h2>
         <div class="mode-toggle">
             <button class="mode-btn active" onclick="switchMode('valentine')">St-Valentin</button>
-            <button class="mode-btn" onclick="switchMode('custom')">Perso</button>
+            <button class="mode-btn" onclick="switchMode('custom')">Personnalisé</button>
         </div>
         <div id="form-valentine" class="form-section active">
-            <div class="input-group"><label>Prénom</label><input type="text" id="val-name" placeholder="Ex: Sarah" /></div>
-            <div class="input-group"><label>Elle/Il sera...</label><select id="val-gender"><option value="F">Ma Valentine</option><option value="M">Mon Valentin</option></select></div>
+            <div class="input-group"><label>Prénom de la personne</label><input type="text" id="val-name" placeholder="Ex: Julie" /></div>
+            <div class="input-group"><label>Rôle</label><select id="val-gender"><option value="F">Ma Valentine</option><option value="M">Mon Valentin</option></select></div>
         </div>
         <div id="form-custom" class="form-section">
-            <div class="input-group"><label>Question</label><input type="text" id="cust-question" placeholder="Resto ce soir ?" /></div>
-            <div class="input-group"><label>Message Succès</label><input type="text" id="cust-success" placeholder="Génial ! 🥂" /></div>
+            <div class="input-group"><label>Votre question</label><input type="text" id="cust-question" placeholder="On va au resto ?" /></div>
+            <div class="input-group"><label>Message de fin</label><input type="text" id="cust-success" placeholder="Trop bien !" /></div>
         </div>
         <button id="generate-btn">Générer le lien ✨</button>
-        <div id="share-section"><span id="share-url"></span><button class="btn" style="padding:5px 15px; font-size:0.8rem; background:var(--primary); color:white;" onclick="copyLink()">Copier</button></div>
+        <div id="share-section">
+            <span id="share-url"></span>
+            <button class="btn" style="padding:8px 20px; font-size:0.9rem; background:var(--primary); color:white; margin-top:10px;" onclick="copyLink()">Copier le lien</button>
+        </div>
     </div>
 
     <div id="main-container" class="glass-panel">
         <h1 id="proposal-text">...</h1>
-        <div class="button-container">
+        <div class="button-container" id="btn-container">
             <button class="btn" id="yesBtn">OUI 💖</button>
             <button class="btn" id="noBtn">NON</button>
         </div>
@@ -117,24 +140,27 @@
 
     <div id="popup-overlay" class="popup-overlay">
         <div class="popup-content">
-            <h3 style="color:var(--primary); margin:0;">Petit coquin... 😏</h3>
-            <p>On ne clique pas sur NON !</p>
-            <button class="btn" style="background:var(--primary); color:white; font-size:0.8rem;" onclick="closePopup()">D'accord...</button>
+            <h3 style="color:var(--primary); margin-top:0;">Euh... non ! 😠</h3>
+            <p>Le bouton "NON" est cassé on dirait...<br>Essaie le vert !</p>
+            <button class="btn" style="background:var(--primary); color:white; font-size:0.9rem; padding: 10px 20px;" onclick="closePopup()">Ok chef</button>
         </div>
     </div>
 
     <div id="success-message" class="glass-panel success-message">
         <div class="heart-icon">❤️</div>
-        <h1 style="color:var(--success);">Yaaay !</h1>
-        <p id="success-text" style="font-weight:700;"></p>
+        <h1 style="color:var(--success); margin: 10px 0;">Yaaay !</h1>
+        <p id="success-text" style="font-weight:700; font-size: 1.2rem;"></p>
     </div>
 
     <div id="toast">Lien copié !</div>
 
     <script>
+        // --- INITIALISATION ---
         const urlParams = new URLSearchParams(window.location.search);
         const qParam = urlParams.get('q'), rParam = urlParams.get('r');
-        const setup = document.getElementById('setup-screen'), main = document.getElementById('main-container'), success = document.getElementById('success-message');
+        const setup = document.getElementById('setup-screen');
+        const main = document.getElementById('main-container');
+        const success = document.getElementById('success-message');
 
         if (qParam && rParam) {
             setup.style.display = 'none';
@@ -144,12 +170,15 @@
             createHearts();
         }
 
+        // --- GESTION ADMIN ---
         let mode = 'valentine';
-        function switchMode(m) {
+        window.switchMode = function(m) {
             mode = m;
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-            event.target.classList.add('active');
+            // Hack pour trouver le bon bouton sans ID
+            const btns = document.querySelectorAll('.mode-btn');
+            if(m==='valentine') btns[0].classList.add('active'); else btns[1].classList.add('active');
             document.getElementById(`form-${m}`).classList.add('active');
         }
 
@@ -157,63 +186,103 @@
             let q, r;
             if (mode === 'valentine') {
                 const n = document.getElementById('val-name').value.trim();
-                if(!n) return;
+                if(!n) return showToast("Mets un prénom !");
                 q = `${n}, veux-tu être ${document.getElementById('val-gender').value === 'F' ? 'ma Valentine' : 'mon Valentin'} ?`;
                 r = "Je savais que tu dirais OUI ! ❤️";
             } else {
                 q = document.getElementById('cust-question').value;
                 r = document.getElementById('cust-success').value;
+                if(!q || !r) return showToast("Remplis tout !");
             }
             const link = `${window.location.href.split('?')[0]}?q=${encodeURIComponent(q)}&r=${encodeURIComponent(r)}`;
             document.getElementById('share-url').textContent = link;
             document.getElementById('share-section').style.display = 'block';
         };
 
-        function copyLink() {
+        window.copyLink = function() {
             navigator.clipboard.writeText(document.getElementById('share-url').textContent);
-            const t = document.getElementById("toast"); t.className = "show"; setTimeout(() => t.className = "", 3000);
+            showToast("Lien copié !");
         }
 
-        // --- LOGIQUE DU BOUTON QUI BOUGE ---
-        const noBtn = document.getElementById('noBtn'), yesBtn = document.getElementById('yesBtn');
+        function showToast(msg) {
+            const t = document.getElementById("toast"); t.textContent = msg; t.className = "show";
+            setTimeout(() => t.className = "", 3000);
+        }
+
+        // --- LA LOGIQUE DU BOUTON (NUCLEAR FIX) ---
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
         let count = 0;
+        let isDetached = false;
 
         function move(e) {
-            if(e.type === 'touchstart') e.preventDefault();
-            count++;
-            if(count === 5) { document.getElementById('popup-overlay').classList.add('visible'); return; }
+            if(e.type === 'touchstart') e.preventDefault(); // Empêche le clic tactile
             
+            count++;
+            if(count >= 5) { 
+                document.getElementById('popup-overlay').classList.add('visible'); 
+                return; 
+            }
+
+            // 1. DÉTACHEMENT DU DOM (NUCLEAR OPTION)
+            // On sort le bouton de la carte pour le mettre directement dans le Body.
+            // Ça garantit qu'il est AU-DESSUS de tout (z-index) et non coupé par la carte.
+            if (!isDetached) {
+                isDetached = true;
+                noBtn.style.position = 'fixed';
+                noBtn.style.zIndex = '10000'; // Z-Index suprême
+                document.body.appendChild(noBtn); // On le déplace dans le body
+            }
+
+            // 2. Grossir le OUI
             yesBtn.style.transform = `scale(${1 + (count * 0.2)})`;
 
-            const btnW = noBtn.offsetWidth, btnH = noBtn.offsetHeight;
-            const maxX = window.innerWidth - btnW - 20, maxY = window.innerHeight - btnH - 20;
+            // 3. Calcul des coordonnées sûres (Safe Zone)
+            const btnW = noBtn.offsetWidth;
+            const btnH = noBtn.offsetHeight;
+            // On garde une marge de 20px par rapport aux bords de l'écran
+            const maxX = window.innerWidth - btnW - 20;
+            const maxY = window.innerHeight - btnH - 20;
 
-            // On le force en fixed pour qu'il bouge sur tout l'écran
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.max(10, Math.random() * maxX) + 'px';
-            noBtn.style.top = Math.max(10, Math.random() * maxY) + 'px';
-            noBtn.style.zIndex = "1000";
+            const newX = Math.max(10, Math.random() * maxX);
+            const newY = Math.max(10, Math.random() * maxY);
+
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
         }
 
-        noBtn.onmouseover = move;
-        noBtn.ontouchstart = move;
+        noBtn.addEventListener('mouseover', move);
+        noBtn.addEventListener('touchstart', move, {passive: false});
+        noBtn.addEventListener('click', move); // Sécurité supplémentaire
 
-        function closePopup() { document.getElementById('popup-overlay').classList.remove('visible'); }
+        window.closePopup = function() { 
+            document.getElementById('popup-overlay').classList.remove('visible'); 
+        }
         
         yesBtn.onclick = () => {
+            // Si le bouton non est détaché, on le cache
+            if(isDetached) noBtn.style.display = 'none';
             main.style.display = 'none';
             success.style.display = 'flex';
+            createHearts(true);
         };
 
-        function createHearts() {
-            for (let i = 0; i < 15; i++) {
+        // --- BACKGROUND HEARTS ---
+        function createHearts(burst = false) {
+            const limit = burst ? 40 : 15;
+            for (let i = 0; i < limit; i++) {
                 const h = document.createElement('div');
                 h.className = 'bg-heart'; h.textContent = '❤️';
                 h.style.left = Math.random() * 100 + 'vw';
                 h.style.animationDuration = (3 + Math.random() * 5) + 's';
                 document.body.appendChild(h);
+                // Nettoyage auto
+                if(burst) setTimeout(() => h.remove(), 5000);
             }
         }
+        // Lancer les cœurs au chargement
+        createHearts();
+
     </script>
 </body>
 </html>

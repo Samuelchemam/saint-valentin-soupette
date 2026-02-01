@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>Une question importante...</title>
+    <title>Une surprise pour toi...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,17 +13,16 @@
         :root {
             --primary: #d946a6;
             --success: #56ab2f;
-            --glass: rgba(255, 255, 255, 0.90); /* Effet verre */
-            --shadow: 0 15px 40px rgba(217, 70, 166, 0.2); /* Ombre colorée */
+            --glass: rgba(255, 255, 255, 0.90);
+            --shadow: 0 15px 40px rgba(217, 70, 166, 0.2);
         }
 
         body {
             margin: 0; padding: 0;
             display: flex; justify-content: center; align-items: center;
             height: 100vh; width: 100vw;
-            /* RETOUR DU FOND ROSE VIVANT */
             background: radial-gradient(circle at center, #ffe6f2, #ffc1e3);
-            font-family: 'Inter', sans-serif; /* Police V5 */
+            font-family: 'Inter', sans-serif;
             overflow: hidden; 
             -webkit-tap-highlight-color: transparent;
             color: #4a4a4a;
@@ -40,7 +39,7 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- CARTE AVEC EFFET DE VERRE (L'ÂME) --- */
+        /* --- CARTE PRINCIPALE --- */
         .glass-panel {
             background: var(--glass);
             backdrop-filter: blur(12px);
@@ -54,16 +53,15 @@
             border: 1px solid rgba(255,255,255,0.6);
         }
 
-        /* Titre propre et moderne */
         h1 { 
             color: var(--primary); 
             font-size: 1.8rem; 
             margin-bottom: 1.5rem; 
             line-height: 1.3; 
-            font-weight: 800; /* Bien gras */
+            font-weight: 800; 
         }
 
-        /* --- FORMULAIRE --- */
+        /* --- CONFIGURATION --- */
         .mode-toggle { display: flex; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 12px; margin-bottom: 1.5rem; }
         .mode-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; background: transparent; color: #888; font-family: inherit; transition: 0.2s; }
         .mode-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -90,7 +88,7 @@
         #share-section { margin-top: 1.2rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 1.2rem; display: none; }
         #share-url { font-size: 0.75rem; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 8px; word-break: break-all; display: block; margin-bottom: 10px; font-family: monospace; color: #555; }
 
-        /* --- BOUTONS COLORÉS (RETOUR DES DÉGRADÉS) --- */
+        /* --- BOUTONS --- */
         .button-container { display: flex; gap: 15px; justify-content: center; align-items: center; height: 80px; margin-top: 1.5rem; }
         .btn { 
             padding: 1rem 2.2rem; font-size: 1rem; border: none; border-radius: 50px; 
@@ -168,19 +166,37 @@
     <div id="toast">Lien copié ! 📋</div>
 
     <script>
-        // --- LECTURE PARAMETRES URL ---
+        // --- DECODAGE URL (ANTI-SPOILER) ---
         const u = new URLSearchParams(window.location.search);
         const qParam = u.get('q');
         const rParam = u.get('r');
 
+        // Fonction pour décoder proprement les accents
+        function decode(str) {
+            try {
+                return decodeURIComponent(atob(str).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+            } catch(e) { return str; } // Fallback si non encodé
+        }
+
+        // Fonction pour encoder proprement les accents
+        function encode(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+                function toSolidBytes(match, p1) {
+                    return String.fromCharCode('0x' + p1);
+            }));
+        }
+
         if (qParam && rParam) {
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('main-container').style.display = 'block';
-            document.getElementById('qt').textContent = decodeURIComponent(qParam);
-            document.getElementById('st').textContent = decodeURIComponent(rParam);
+            // On décode le message chiffré
+            document.getElementById('qt').textContent = decode(qParam);
+            document.getElementById('st').textContent = decode(rParam);
         }
 
-        // --- SETUP ADMIN ---
+        // --- GESTION ADMIN ---
         let m = 'v';
         function sw(x) {
             m = x;
@@ -190,20 +206,22 @@
         }
 
         function gen() {
-            let resQ, resR;
+            let rawQ, rawR;
             if (m === 'v') {
                 const name = document.getElementById('n').value.trim();
                 if(!name) return alert("Prénom manquant !");
                 const role = document.getElementById('g').value === 'F' ? 'ma Valentine' : 'mon Valentin';
-                resQ = `${name}, veux-tu être ${role} ?`;
-                resR = "Je le savais ! ❤️";
+                rawQ = `${name}, veux-tu être ${role} ?`;
+                rawR = "Je le savais ! ❤️";
             } else {
-                resQ = document.getElementById('cq').value.trim();
-                resR = document.getElementById('cs').value.trim();
-                if(!resQ || !resR) return alert("Tout remplir !");
+                rawQ = document.getElementById('cq').value.trim();
+                rawR = document.getElementById('cs').value.trim();
+                if(!rawQ || !rawR) return alert("Tout remplir !");
             }
-            // Création lien optimisé
-            const link = `${window.location.origin}${window.location.pathname}?q=${encodeURIComponent(resQ)}&r=${encodeURIComponent(resR)}`;
+            
+            // On encode le message pour qu'il soit illisible dans l'URL
+            const link = `${window.location.origin}${window.location.pathname}?q=${encode(rawQ)}&r=${encode(rawR)}`;
+            
             document.getElementById('share-url').textContent = link;
             document.getElementById('share-section').style.display = 'block';
         }
@@ -214,7 +232,7 @@
             setTimeout(() => t.className = '', 2000);
         }
 
-        // --- LOGIQUE BOUTON NON (NUCLEAR MODE) ---
+        // --- JEU DU BOUTON (NUCLEAR MODE) ---
         const nb = document.getElementById('noBtn');
         const yb = document.getElementById('yesBtn');
         let c = 0, det = false, psh = false;
@@ -223,15 +241,11 @@
             if(e.type === 'touchstart') e.preventDefault();
             
             c++;
-            
-            // Popup au 5ème essai
             if(c === 5 && !psh) { 
                 document.getElementById('p-o').classList.add('visible'); 
-                psh = true; 
-                return; 
+                psh = true; return; 
             }
 
-            // DETACHEMENT (Z-Index Supérieur)
             if (!det) { 
                 det = true; 
                 nb.style.position = 'fixed'; 
@@ -239,10 +253,8 @@
                 document.body.appendChild(nb); 
             }
 
-            // Grossissement progressif du OUI
             yb.style.transform = `scale(${1 + (c * 0.1)})`;
 
-            // Calcul Position Safe
             const maxX = window.innerWidth - nb.offsetWidth - 20;
             const maxY = window.innerHeight - nb.offsetHeight - 20;
             
@@ -253,9 +265,7 @@
             nb.style.top = y + 'px';
         }
 
-        nb.onmouseover = mv; 
-        nb.ontouchstart = mv;
-        nb.onclick = mv; 
+        nb.onmouseover = mv; nb.ontouchstart = mv; nb.onclick = mv; 
 
         function clp() { 
             document.getElementById('p-o').classList.remove('visible'); 
@@ -269,7 +279,6 @@
             herts(true);
         }
         
-        // --- BACKGROUND HEARTS ---
         function herts(burst = false) {
             const limit = burst ? 50 : 15;
             for (let i = 0; i < limit; i++) {

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Mes Recettes Glacées</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #d946a6;
+        --primary-dark: #b02e82;
+        --success: #56ab2f;
+        --warn: #e8a33d;
+        --ink: #4a4a4a;
+        --muted: #888;
+        --glass: rgba(255, 255, 255, 0.92);
+        --border: #ffdeeb;
+        --shadow: 0 15px 40px rgba(217, 70, 166, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0; padding: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, #fff3f9, #ffdcee 60%, #ffc9e6);
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+        padding: 1.5rem 1rem 4rem;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 1.5rem; }
+    header h1 { color: var(--primary); font-weight: 800; font-size: 1.9rem; margin: 0 0 0.3rem; }
+    header p { color: var(--muted); margin: 0; font-size: 0.9rem; }
+
+    nav.tabs { display: flex; justify-content: center; gap: 0.6rem; margin: 1.2rem 0; flex-wrap: wrap; }
+    nav.tabs a, nav.tabs span {
+        padding: 0.5rem 1.1rem; border-radius: 50px; font-weight: 600; font-size: 0.85rem;
+        text-decoration: none; color: var(--muted); background: rgba(255,255,255,0.6);
+        border: 1px solid rgba(255,255,255,0.8);
+    }
+    nav.tabs a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(217,70,166,0.3); }
+    nav.tabs span.disabled { opacity: 0.55; cursor: default; }
+
+    .panel {
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.7);
+        padding: 1.3rem 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* --- TOOLBAR --- */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; }
+    .toolbar input[type="text"] {
+        flex: 1 1 200px; padding: 0.7rem 1rem; border: 2px solid var(--border);
+        border-radius: 12px; font-family: inherit; font-size: 0.9rem; background: white;
+    }
+    .toolbar input[type="text"]:focus { outline: none; border-color: var(--primary); }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+    .chip {
+        padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+        background: rgba(217,70,166,0.08); color: var(--primary); border: 1px solid rgba(217,70,166,0.2);
+        cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    .chip.active { background: var(--primary); color: white; }
+    .chip.tag { background: rgba(0,0,0,0.05); color: #666; border-color: transparent; }
+    .chip.tag.active { background: #333; color: white; }
+
+    .btn {
+        padding: 0.7rem 1.2rem; border: none; border-radius: 12px; font-weight: 700;
+        font-size: 0.85rem; cursor: pointer; font-family: inherit; white-space: nowrap;
+        transition: transform 0.08s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 12px rgba(217,70,166,0.3); }
+    .btn-dark { background: #333; color: white; }
+    .btn-light { background: rgba(0,0,0,0.06); color: #444; }
+    .btn-danger { background: #fde2e2; color: #c0392b; }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 8px; }
+
+    /* --- RECIPE GRID --- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .card {
+        background: var(--glass); border-radius: 18px; padding: 1.1rem 1.2rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06); border: 1px solid rgba(255,255,255,0.7);
+        cursor: pointer; transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(217,70,166,0.18); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+    .card h3 { margin: 0 0 0.3rem; font-size: 1.05rem; color: #333; }
+    .badge {
+        display: inline-block; padding: 0.2rem 0.65rem; border-radius: 50px; font-size: 0.68rem;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap;
+    }
+    .badge.creme_glacee { background: #ffe3ef; color: #b0327a; }
+    .badge.gelato { background: #fff0d9; color: #b6772b; }
+    .badge.sorbet { background: #dcf5ff; color: #2381a8; }
+    .badge.milkshake { background: #eee0ff; color: #7a3fc9; }
+
+    .card-tags { margin: 0.5rem 0; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag-pill { font-size: 0.68rem; background: rgba(0,0,0,0.05); color: #666; padding: 0.15rem 0.55rem; border-radius: 50px; }
+
+    .macro-row { display: flex; gap: 0.6rem; margin-top: 0.7rem; font-size: 0.72rem; color: var(--muted); flex-wrap: wrap; }
+    .macro-row b { color: #333; }
+    .incomplete-flag { font-size: 0.7rem; color: var(--warn); font-weight: 700; margin-top: 0.5rem; }
+    .card-notes { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; max-height: 2.6em; overflow: hidden; }
+
+    .empty-state { text-align: center; color: var(--muted); padding: 3rem 1rem; font-size: 0.9rem; }
+
+    /* --- MODAL --- */
+    .modal-overlay {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px); z-index: 999; justify-content: center; align-items: flex-start;
+        overflow-y: auto; padding: 2rem 1rem;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+        background: white; border-radius: 20px; padding: 1.6rem; width: 100%; max-width: 640px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal h2 { margin: 0 0 1rem; color: var(--primary); font-size: 1.3rem; }
+
+    .field { margin-bottom: 0.9rem; }
+    .field label { display: block; font-weight: 600; font-size: 0.8rem; color: #666; margin-bottom: 0.35rem; }
+    .field input[type="text"], .field select, .field textarea {
+        width: 100%; padding: 0.65rem 0.8rem; border: 2px solid var(--border); border-radius: 10px;
+        font-family: inherit; font-size: 0.9rem; background: #fff;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); }
+    .field textarea { min-height: 60px; resize: vertical; }
+    .field-row { display: flex; gap: 0.8rem; }
+    .field-row .field { flex: 1; }
+
+    .ing-table { width: 100%; border-collapse: collapse; margin-top: 0.4rem; }
+    .ing-table th { text-align: left; font-size: 0.7rem; color: var(--muted); font-weight: 700; padding-bottom: 0.3rem; }
+    .ing-table td { padding: 0.25rem 0.25rem 0.25rem 0; }
+    .ing-table input, .ing-table select { width: 100%; padding: 0.5rem 0.6rem; border: 2px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.82rem; }
+    .ing-table td.qty { width: 90px; }
+    .ing-table td.rm { width: 30px; text-align: center; }
+    .rm-btn { background: none; border: none; color: #c0392b; font-size: 1.1rem; cursor: pointer; padding: 0; }
+
+    .macro-preview {
+        background: #fdf3f9; border-radius: 12px; padding: 0.8rem 1rem; margin-top: 0.8rem;
+        font-size: 0.82rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+    }
+    .macro-preview .m { color: #333; font-weight: 700; }
+    .macro-preview .lbl { color: var(--muted); font-weight: 500; margin-right: 0.2rem; }
+    .macro-warn { color: var(--warn); font-size: 0.76rem; margin-top: 0.4rem; width: 100%; }
+
+    .modal-actions { display: flex; justify-content: space-between; gap: 0.6rem; margin-top: 1.3rem; }
+    .modal-actions .left { display: flex; gap: 0.5rem; }
+    .modal-actions .right { display: flex; gap: 0.5rem; }
+
+    /* --- INGREDIENTS BASE PANEL --- */
+    #ing-base-panel { display: none; }
+    #ing-base-panel.visible { display: block; }
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .ref-table th { text-align: left; padding: 0.4rem; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
+    .ref-table td { padding: 0.4rem; border-bottom: 1px solid #f5e5ee; }
+    .ref-table input { width: 100%; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.8rem; }
+    .ref-add-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+    .ref-add-row input { flex: 1 1 100px; padding: 0.5rem 0.7rem; border: 2px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.82rem; }
+
+    #toast { visibility: hidden; position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 50px; z-index: 2000; font-size: 0.85rem; font-weight: 600; }
+    #toast.show { visibility: visible; animation: fade 0.3s; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    #import-file { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>🍨 Mes Recettes Glacées</h1>
+        <p>Crèmes glacées, gelatos, sorbets & milkshakes — carnet de recettes maison</p>
+    </header>
+
+    <nav class="tabs">
+        <a href="#" class="active">📖 Recettes</a>
+        <span class="disabled">🧪 Calculateur (bientôt)</span>
+        <span class="disabled">💡 Idées (bientôt)</span>
+    </nav>
+
+    <div class="panel">
+        <div class="toolbar">
+            <input type="text" id="search" placeholder="🔍 Rechercher une recette, un ingrédient, un tag..." oninput="renderRecipes()" />
+            <button class="btn btn-primary" onclick="openRecipeModal()">+ Nouvelle recette</button>
+            <button class="btn btn-light" onclick="toggleIngBase()">🧂 Base ingrédients</button>
+            <button class="btn btn-light" onclick="exportData()">⬇️ Export</button>
+            <button class="btn btn-light" onclick="document.getElementById('import-file').click()">⬆️ Import</button>
+            <input type="file" id="import-file" accept="application/json" onchange="importData(event)" />
+        </div>
+        <div class="chip-row" id="cat-filters"></div>
+        <div class="chip-row" id="tag-filters"></div>
+    </div>
+
+    <div class="panel" id="ing-base-panel">
+        <h2 style="margin-top:0; color:var(--primary); font-size:1.1rem;">🧂 Base d'ingrédients de référence</h2>
+        <p style="font-size:0.8rem; color:var(--muted); margin-top:-0.4rem;">Valeurs pour 100g. Utilisées pour calculer automatiquement les macros de tes recettes.</p>
+        <div style="overflow-x:auto;">
+        <table class="ref-table">
+            <thead><tr><th>Nom</th><th>Gras %</th><th>Sucre %</th><th>Solides totaux %</th><th></th></tr></thead>
+            <tbody id="ref-tbody"></tbody>
+        </table>
+        </div>
+        <div class="ref-add-row">
+            <input type="text" id="ref-new-nom" placeholder="Nom de l'ingrédient" />
+            <input type="text" id="ref-new-gras" placeholder="Gras %" />
+            <input type="text" id="ref-new-sucre" placeholder="Sucre %" />
+            <input type="text" id="ref-new-solides" placeholder="Solides totaux %" />
+            <button class="btn btn-primary btn-sm" onclick="addRefIngredient()">+ Ajouter</button>
+        </div>
+    </div>
+
+    <div class="grid" id="recipe-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">Aucune recette ne correspond à ta recherche.</div>
+</div>
+
+<!-- MODAL RECETTE -->
+<div class="modal-overlay" id="recipe-modal-overlay">
+    <div class="modal">
+        <h2 id="modal-title">Nouvelle recette</h2>
+        <input type="hidden" id="r-id" />
+        <div class="field-row">
+            <div class="field"><label>Nom de la recette</label><input type="text" id="r-nom" placeholder="Ex: Pêche Melba" /></div>
+            <div class="field" style="max-width:180px;"><label>Catégorie</label>
+                <select id="r-categorie">
+                    <option value="creme_glacee">Crème glacée</option>
+                    <option value="gelato">Gelato</option>
+                    <option value="sorbet">Sorbet</option>
+                    <option value="milkshake">Milkshake</option>
+                </select>
+            </div>
+        </div>
+        <div class="field"><label>Tags (séparés par des virgules)</label><input type="text" id="r-tags" placeholder="Ex: fruité, été, sans gluten" /></div>
+
+        <div class="field">
+            <label>Ingrédients</label>
+            <table class="ing-table">
+                <thead><tr><th>Ingrédient</th><th>Quantité (g)</th><th></th></tr></thead>
+                <tbody id="r-ingredients"></tbody>
+            </table>
+            <button class="btn btn-light btn-sm" style="margin-top:0.5rem;" onclick="addIngredientRow()">+ Ajouter un ingrédient</button>
+            <div class="macro-preview" id="macro-preview"></div>
+        </div>
+
+        <div class="field"><label>Notes</label><textarea id="r-notes" placeholder="Instructions, astuces, variantes..."></textarea></div>
+
+        <div class="modal-actions">
+            <div class="left">
+                <button class="btn btn-danger" id="delete-btn" style="display:none;" onclick="deleteRecipe()">Supprimer</button>
+            </div>
+            <div class="right">
+                <button class="btn btn-light" onclick="closeRecipeModal()">Annuler</button>
+                <button class="btn btn-primary" onclick="saveRecipe()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<datalist id="ref-ingredients-list"></datalist>
+
+<script>
+/* ================= DATA LAYER ================= */
+const LS_RECIPES = 'glaces_recipes_v1';
+const LS_INGREDIENTS = 'glaces_ingredients_v1';
+
+const CATEGORIES = {
+    creme_glacee: 'Crème glacée',
+    gelato: 'Gelato',
+    sorbet: 'Sorbet',
+    milkshake: 'Milkshake'
+};
+
+function uid() {
+    return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function normalize(str) {
+    return (str || '').toString().trim().toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+const SEED_INGREDIENTS = [
+    { nom: 'Lait entier', gras_pour_100g: 3.5, sucre_pour_100g: 4.8, solides_pour_100g: 12.5 },
+    { nom: 'Lait demi-écrémé', gras_pour_100g: 2, sucre_pour_100g: 4.9, solides_pour_100g: 11 },
+    { nom: 'Crème 35%', gras_pour_100g: 35, sucre_pour_100g: 2.9, solides_pour_100g: 40 },
+    { nom: 'Sucre', gras_pour_100g: 0, sucre_pour_100g: 100, solides_pour_100g: 100 },
+    { nom: 'Lait concentré sucré', gras_pour_100g: 8, sucre_pour_100g: 55, solides_pour_100g: 74 },
+    { nom: 'Lait concentré non sucré', gras_pour_100g: 8, sucre_pour_100g: 12.5, solides_pour_100g: 25 },
+    { nom: 'Cream cheese', gras_pour_100g: 33, sucre_pour_100g: 3, solides_pour_100g: 46 },
+    { nom: "Jaune d'œuf", gras_pour_100g: 27, sucre_pour_100g: 0.6, solides_pour_100g: 51 },
+    { nom: 'Lait en poudre écrémé', gras_pour_100g: 1, sucre_pour_100g: 51, solides_pour_100g: 97 },
+    { nom: 'Sirop de glucose', gras_pour_100g: 0, sucre_pour_100g: 80, solides_pour_100g: 100 },
+    { nom: 'Miel', gras_pour_100g: 0, sucre_pour_100g: 82, solides_pour_100g: 82 },
+    { nom: 'Nutella', gras_pour_100g: 31, sucre_pour_100g: 56.3, solides_pour_100g: 99 },
+    { nom: 'Noisettes torréfiées', gras_pour_100g: 61, sucre_pour_100g: 4.3, solides_pour_100g: 97 },
+    { nom: 'Praliné noisette', gras_pour_100g: 40, sucre_pour_100g: 50, solides_pour_100g: 99 },
+    { nom: 'Poire (purée)', gras_pour_100g: 0.1, sucre_pour_100g: 10, solides_pour_100g: 15 },
+    { nom: 'Pêche (purée)', gras_pour_100g: 0.1, sucre_pour_100g: 9, solides_pour_100g: 13 },
+    { nom: 'Framboise (coulis)', gras_pour_100g: 0.5, sucre_pour_100g: 5, solides_pour_100g: 12 },
+    { nom: 'Myrtille (purée)', gras_pour_100g: 0.3, sucre_pour_100g: 10, solides_pour_100g: 15 },
+    { nom: 'Beurre', gras_pour_100g: 82, sucre_pour_100g: 0.1, solides_pour_100g: 84 },
+    { nom: 'Chocolat noir 70%', gras_pour_100g: 42, sucre_pour_100g: 29, solides_pour_100g: 99 },
+    { nom: 'Sel', gras_pour_100g: 0, sucre_pour_100g: 0, solides_pour_100g: 100 },
+    { nom: 'Extrait de vanille', gras_pour_100g: 0, sucre_pour_100g: 5, solides_pour_100g: 10 },
+    { nom: 'Stabilisateur (gomme)', gras_pour_100g: 0, sucre_pour_100g: 0, solides_pour_100g: 100 }
+];
+
+const SEED_RECIPES = [
+    {
+        id: uid(),
+        nom: 'Noisette – Poire – Nutella',
+        categorie: 'gelato',
+        tags: ['automne', 'gourmand', 'nutella'],
+        ingredients: [
+            { nom: 'Lait entier', quantite_g: null },
+            { nom: 'Crème 35%', quantite_g: null },
+            { nom: 'Sucre', quantite_g: null },
+            { nom: "Jaune d'œuf", quantite_g: null },
+            { nom: 'Nutella', quantite_g: null },
+            { nom: 'Praliné noisette', quantite_g: null },
+            { nom: 'Poire (purée)', quantite_g: null },
+            { nom: 'Lait en poudre écrémé', quantite_g: null }
+        ],
+        notes: 'Base gelato + swirl de Nutella + dés de poire pochée. Quantités à définir.',
+        dateAjout: new Date().toISOString()
+    },
+    {
+        id: uid(),
+        nom: 'Pêche Melba',
+        categorie: 'creme_glacee',
+        tags: ['fruité', 'été', 'classique'],
+        ingredients: [
+            { nom: 'Lait entier', quantite_g: null },
+            { nom: 'Crème 35%', quantite_g: null },
+            { nom: 'Sucre', quantite_g: null },
+            { nom: "Jaune d'œuf", quantite_g: null },
+            { nom: 'Extrait de vanille', quantite_g: null },
+            { nom: 'Pêche (purée)', quantite_g: null },
+            { nom: 'Framboise (coulis)', quantite_g: null }
+        ],
+        notes: 'Base vanille façon crème glacée, pêche pochée en morceaux, coulis de framboise en marbrure. Quantités à définir.',
+        dateAjout: new Date().toISOString()
+    },
+    {
+        id: uid(),
+        nom: 'Clone Magnum Starchaser',
+        categorie: 'creme_glacee',
+        tags: ['bâtonnet', 'chocolat', 'clone'],
+        ingredients: [
+            { nom: 'Lait entier', quantite_g: null },
+            { nom: 'Crème 35%', quantite_g: null },
+            { nom: 'Sucre', quantite_g: null },
+            { nom: "Jaune d'œuf", quantite_g: null },
+            { nom: 'Extrait de vanille', quantite_g: null },
+            { nom: 'Myrtille (purée)', quantite_g: null },
+            { nom: 'Chocolat noir 70%', quantite_g: null }
+        ],
+        notes: "Base vanille en bâtonnet, cœur/coulis myrtille, enrobage chocolat noir craquant (+ éclats pétillants si dispo). Quantités à définir.",
+        dateAjout: new Date().toISOString()
+    }
+];
+
+function loadRecipes() {
+    const raw = localStorage.getItem(LS_RECIPES);
+    if (!raw) {
+        localStorage.setItem(LS_RECIPES, JSON.stringify(SEED_RECIPES));
+        return JSON.parse(JSON.stringify(SEED_RECIPES));
+    }
+    try { return JSON.parse(raw); } catch (e) { return []; }
+}
+
+function loadIngredients() {
+    const raw = localStorage.getItem(LS_INGREDIENTS);
+    if (!raw) {
+        localStorage.setItem(LS_INGREDIENTS, JSON.stringify(SEED_INGREDIENTS));
+        return JSON.parse(JSON.stringify(SEED_INGREDIENTS));
+    }
+    try { return JSON.parse(raw); } catch (e) { return []; }
+}
+
+function saveRecipes() { localStorage.setItem(LS_RECIPES, JSON.stringify(recipes)); }
+function saveIngredients() { localStorage.setItem(LS_INGREDIENTS, JSON.stringify(ingredientsRef)); }
+
+let recipes = loadRecipes();
+let ingredientsRef = loadIngredients();
+
+/* ================= MACRO CALC ================= */
+function findRef(nom) {
+    const n = normalize(nom);
+    return ingredientsRef.find(r => normalize(r.nom) === n) || null;
+}
+
+function calcMacros(ings) {
+    let totalWeight = 0, fat = 0, sugar = 0, solids = 0;
+    let unmatched = [];
+    let hasEmptyQty = false;
+
+    ings.forEach(ing => {
+        if (!ing.nom) return;
+        const qty = Number(ing.quantite_g);
+        if (!qty || qty <= 0) { hasEmptyQty = true; return; }
+        const ref = findRef(ing.nom);
+        totalWeight += qty;
+        if (ref) {
+            fat += qty * ref.gras_pour_100g / 100;
+            sugar += qty * ref.sucre_pour_100g / 100;
+            solids += qty * ref.solides_pour_100g / 100;
+        } else {
+            unmatched.push(ing.nom);
+        }
+    });
+
+    if (totalWeight === 0) {
+        return { ok: false, totalWeight: 0, hasEmptyQty, unmatched };
+    }
+
+    return {
+        ok: true,
+        totalWeight,
+        pctFat: fat / totalWeight * 100,
+        pctSugar: sugar / totalWeight * 100,
+        pctSolids: solids / totalWeight * 100,
+        unmatched,
+        hasEmptyQty
+    };
+}
+
+/* ================= INGREDIENT BASE PANEL ================= */
+function toggleIngBase() {
+    document.getElementById('ing-base-panel').classList.toggle('visible');
+}
+
+function renderRefTable() {
+    const tbody = document.getElementById('ref-tbody');
+    tbody.innerHTML = '';
+    ingredientsRef.slice().sort((a,b) => a.nom.localeCompare(b.nom)).forEach((ing, idx) => {
+        const realIdx = ingredientsRef.indexOf(ing);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" value="${escapeAttr(ing.nom)}" onchange="updateRef(${realIdx}, 'nom', this.value)" /></td>
+            <td><input type="text" value="${ing.gras_pour_100g}" onchange="updateRef(${realIdx}, 'gras_pour_100g', this.value)" /></td>
+            <td><input type="text" value="${ing.sucre_pour_100g}" onchange="updateRef(${realIdx}, 'sucre_pour_100g', this.value)" /></td>
+            <td><input type="text" value="${ing.solides_pour_100g}" onchange="updateRef(${realIdx}, 'solides_pour_100g', this.value)" /></td>
+            <td><button class="rm-btn" onclick="deleteRef(${realIdx})" title="Supprimer">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    const dl = document.getElementById('ref-ingredients-list');
+    dl.innerHTML = ingredientsRef.map(i => `<option value="${escapeAttr(i.nom)}">`).join('');
+}
+
+function updateRef(idx, field, value) {
+    if (field === 'nom') {
+        ingredientsRef[idx].nom = value.trim();
+    } else {
+        ingredientsRef[idx][field] = Number(value) || 0;
+    }
+    saveIngredients();
+    renderRefTable();
+    renderRecipes();
+    renderMacroPreview();
+}
+
+function deleteRef(idx) {
+    if (!confirm(`Supprimer "${ingredientsRef[idx].nom}" de la base de référence ?`)) return;
+    ingredientsRef.splice(idx, 1);
+    saveIngredients();
+    renderRefTable();
+    renderRecipes();
+}
+
+function addRefIngredient() {
+    const nom = document.getElementById('ref-new-nom').value.trim();
+    const gras = Number(document.getElementById('ref-new-gras').value) || 0;
+    const sucre = Number(document.getElementById('ref-new-sucre').value) || 0;
+    const solides = Number(document.getElementById('ref-new-solides').value) || 0;
+    if (!nom) { toast('Nom manquant'); return; }
+    if (findRef(nom)) { toast('Cet ingrédient existe déjà'); return; }
+    ingredientsRef.push({ nom, gras_pour_100g: gras, sucre_pour_100g: sucre, solides_pour_100g: solides });
+    saveIngredients();
+    document.getElementById('ref-new-nom').value = '';
+    document.getElementById('ref-new-gras').value = '';
+    document.getElementById('ref-new-sucre').value = '';
+    document.getElementById('ref-new-solides').value = '';
+    renderRefTable();
+    toast('Ingrédient ajouté ✓');
+}
+
+function escapeAttr(str) {
+    return (str || '').toString().replace(/"/g, '&quot;');
+}
+function escapeHtml(str) {
+    return (str || '').toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+/* ================= FILTERS ================= */
+let activeCategory = 'all';
+let activeTags = new Set();
+
+function allTags() {
+    const s = new Set();
+    recipes.forEach(r => (r.tags || []).forEach(t => s.add(t)));
+    return Array.from(s).sort();
+}
+
+function renderFilters() {
+    const catBox = document.getElementById('cat-filters');
+    catBox.innerHTML = '';
+    const all = document.createElement('div');
+    all.className = 'chip' + (activeCategory === 'all' ? ' active' : '');
+    all.textContent = 'Toutes';
+    all.onclick = () => { activeCategory = 'all'; renderFilters(); renderRecipes(); };
+    catBox.appendChild(all);
+    Object.entries(CATEGORIES).forEach(([key, label]) => {
+        const c = document.createElement('div');
+        c.className = 'chip' + (activeCategory === key ? ' active' : '');
+        c.textContent = label;
+        c.onclick = () => { activeCategory = key; renderFilters(); renderRecipes(); };
+        catBox.appendChild(c);
+    });
+
+    const tagBox = document.getElementById('tag-filters');
+    tagBox.innerHTML = '';
+    allTags().forEach(tag => {
+        const c = document.createElement('div');
+        c.className = 'chip tag' + (activeTags.has(tag) ? ' active' : '');
+        c.textContent = '#' + tag;
+        c.onclick = () => {
+            if (activeTags.has(tag)) activeTags.delete(tag); else activeTags.add(tag);
+            renderFilters(); renderRecipes();
+        };
+        tagBox.appendChild(c);
+    });
+}
+
+/* ================= RECIPE GRID ================= */
+function renderRecipes() {
+    const q = normalize(document.getElementById('search').value);
+    const grid = document.getElementById('recipe-grid');
+    grid.innerHTML = '';
+
+    let filtered = recipes.filter(r => {
+        if (activeCategory !== 'all' && r.categorie !== activeCategory) return false;
+        if (activeTags.size > 0) {
+            const rTags = new Set(r.tags || []);
+            for (const t of activeTags) if (!rTags.has(t)) return false;
+        }
+        if (q) {
+            const haystack = normalize([
+                r.nom, r.notes, ...(r.tags || []), ...(r.ingredients || []).map(i => i.nom)
+            ].join(' '));
+            if (!haystack.includes(q)) return false;
+        }
+        return true;
+    });
+
+    filtered.sort((a, b) => new Date(b.dateAjout) - new Date(a.dateAjout));
+
+    document.getElementById('empty-state').style.display = filtered.length === 0 ? 'block' : 'none';
+
+    filtered.forEach(r => {
+        const macros = calcMacros(r.ingredients || []);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openRecipeModal(r.id);
+
+        let macroHtml = '';
+        if (macros.ok) {
+            macroHtml = `<div class="macro-row">
+                <span>🧈 <b>${macros.pctFat.toFixed(1)}%</b> gras</span>
+                <span>🍬 <b>${macros.pctSugar.toFixed(1)}%</b> sucre</span>
+                <span>🧊 <b>${macros.pctSolids.toFixed(1)}%</b> solides</span>
+            </div>`;
+        }
+        let flagHtml = '';
+        if (macros.hasEmptyQty || !macros.ok) {
+            flagHtml = `<div class="incomplete-flag">⚠️ Quantités à compléter</div>`;
+        } else if (macros.unmatched && macros.unmatched.length) {
+            flagHtml = `<div class="incomplete-flag">⚠️ Non reconnu : ${macros.unmatched.join(', ')}</div>`;
+        }
+
+        card.innerHTML = `
+            <div class="card-top">
+                <h3>${escapeHtml(r.nom)}</h3>
+                <span class="badge ${r.categorie}">${CATEGORIES[r.categorie] || r.categorie}</span>
+            </div>
+            <div style="font-size:0.78rem; color:var(--muted);">${(r.ingredients||[]).length} ingrédient${(r.ingredients||[]).length>1?'s':''}</div>
+            <div class="card-tags">${(r.tags||[]).map(t => `<span class="tag-pill">#${escapeHtml(t)}</span>`).join('')}</div>
+            ${r.notes ? `<div class="card-notes">${escapeHtml(r.notes)}</div>` : ''}
+            ${macroHtml}
+            ${flagHtml}
+        `;
+        grid.appendChild(card);
+    });
+}
+
+/* ================= RECIPE MODAL ================= */
+let editingIngredients = [];
+
+function openRecipeModal(id) {
+    renderRefTable(); // ensure datalist is fresh
+    const overlay = document.getElementById('recipe-modal-overlay');
+    document.getElementById('delete-btn').style.display = id ? 'inline-block' : 'none';
+
+    if (id) {
+        const r = recipes.find(x => x.id === id);
+        document.getElementById('modal-title').textContent = 'Modifier la recette';
+        document.getElementById('r-id').value = r.id;
+        document.getElementById('r-nom').value = r.nom;
+        document.getElementById('r-categorie').value = r.categorie;
+        document.getElementById('r-tags').value = (r.tags || []).join(', ');
+        document.getElementById('r-notes').value = r.notes || '';
+        editingIngredients = (r.ingredients || []).map(i => ({ ...i }));
+    } else {
+        document.getElementById('modal-title').textContent = 'Nouvelle recette';
+        document.getElementById('r-id').value = '';
+        document.getElementById('r-nom').value = '';
+        document.getElementById('r-categorie').value = 'creme_glacee';
+        document.getElementById('r-tags').value = '';
+        document.getElementById('r-notes').value = '';
+        editingIngredients = [];
+    }
+
+    renderIngredientRows();
+    overlay.classList.add('visible');
+}
+
+function closeRecipeModal() {
+    document.getElementById('recipe-modal-overlay').classList.remove('visible');
+}
+
+function renderIngredientRows() {
+    const tbody = document.getElementById('r-ingredients');
+    tbody.innerHTML = '';
+    editingIngredients.forEach((ing, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" list="ref-ingredients-list" value="${escapeAttr(ing.nom)}" placeholder="Nom de l'ingrédient" onchange="updateIngRow(${idx}, 'nom', this.value)" /></td>
+            <td class="qty"><input type="text" value="${ing.quantite_g == null ? '' : ing.quantite_g}" placeholder="g" onchange="updateIngRow(${idx}, 'quantite_g', this.value)" /></td>
+            <td class="rm"><button class="rm-btn" onclick="removeIngRow(${idx})" title="Retirer">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+    renderMacroPreview();
+}
+
+function addIngredientRow() {
+    editingIngredients.push({ nom: '', quantite_g: null });
+    renderIngredientRows();
+}
+
+function updateIngRow(idx, field, value) {
+    if (field === 'quantite_g') {
+        editingIngredients[idx].quantite_g = value === '' ? null : Number(value);
+    } else {
+        editingIngredients[idx].nom = value;
+    }
+    renderMacroPreview();
+}
+
+function removeIngRow(idx) {
+    editingIngredients.splice(idx, 1);
+    renderIngredientRows();
+}
+
+function renderMacroPreview() {
+    const box = document.getElementById('macro-preview');
+    const macros = calcMacros(editingIngredients);
+    if (!macros.ok) {
+        box.innerHTML = `<span style="color:var(--muted);">Ajoute des ingrédients avec leurs quantités pour voir les macros calculées automatiquement.</span>`;
+        return;
+    }
+    let warn = '';
+    if (macros.unmatched.length) {
+        warn = `<div class="macro-warn">⚠️ Non reconnus dans la base (exclus du calcul) : ${macros.unmatched.join(', ')} — ajoute-les via "🧂 Base ingrédients".</div>`;
+    }
+    if (macros.hasEmptyQty) {
+        warn += `<div class="macro-warn">⚠️ Certains ingrédients n'ont pas encore de quantité.</div>`;
+    }
+    box.innerHTML = `
+        <span><span class="lbl">Poids total</span><span class="m">${macros.totalWeight.toFixed(0)} g</span></span>
+        <span><span class="lbl">Gras</span><span class="m">${macros.pctFat.toFixed(1)}%</span></span>
+        <span><span class="lbl">Sucre</span><span class="m">${macros.pctSugar.toFixed(1)}%</span></span>
+        <span><span class="lbl">Solides totaux</span><span class="m">${macros.pctSolids.toFixed(1)}%</span></span>
+        ${warn}
+    `;
+}
+
+function saveRecipe() {
+    const nom = document.getElementById('r-nom').value.trim();
+    if (!nom) { toast('Le nom de la recette est requis'); return; }
+    const categorie = document.getElementById('r-categorie').value;
+    const tags = document.getElementById('r-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+    const notes = document.getElementById('r-notes').value.trim();
+    const ingredients = editingIngredients.filter(i => i.nom && i.nom.trim());
+
+    const id = document.getElementById('r-id').value;
+    if (id) {
+        const r = recipes.find(x => x.id === id);
+        Object.assign(r, { nom, categorie, tags, notes, ingredients });
+    } else {
+        recipes.push({ id: uid(), nom, categorie, tags, notes, ingredients, dateAjout: new Date().toISOString() });
+    }
+    saveRecipes();
+    closeRecipeModal();
+    renderFilters();
+    renderRecipes();
+    toast('Recette enregistrée ✓');
+}
+
+function deleteRecipe() {
+    const id = document.getElementById('r-id').value;
+    if (!id) return;
+    if (!confirm('Supprimer définitivement cette recette ?')) return;
+    recipes = recipes.filter(r => r.id !== id);
+    saveRecipes();
+    closeRecipeModal();
+    renderFilters();
+    renderRecipes();
+    toast('Recette supprimée');
+}
+
+/* ================= EXPORT / IMPORT ================= */
+function exportData() {
+    const data = { recipes, ingredientsRef, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `recettes-glacees-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('Export téléchargé ✓');
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result);
+            if (!Array.isArray(data.recipes)) throw new Error('Format invalide');
+            if (!confirm('Importer ce fichier remplacera toutes tes recettes et ta base d\'ingrédients actuelles. Continuer ?')) return;
+            recipes = data.recipes;
+            ingredientsRef = Array.isArray(data.ingredientsRef) ? data.ingredientsRef : ingredientsRef;
+            saveRecipes();
+            saveIngredients();
+            renderFilters();
+            renderRecipes();
+            renderRefTable();
+            toast('Import réussi ✓');
+        } catch (e) {
+            toast('Fichier invalide');
+        }
+        event.target.value = '';
+    };
+    reader.readAsText(file);
+}
+
+/* ================= TOAST ================= */
+let toastTimer;
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.className = '', 2200);
+}
+
+/* ================= INIT ================= */
+renderFilters();
+renderRecipes();
+renderRefTable();
+</script>
+</body>
+</html>

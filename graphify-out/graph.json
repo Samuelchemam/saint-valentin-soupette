@@ -1,0 +1,471 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "index_link_share_decode_flow",
+        "label": "Link generation & decoding flow (q/r params)",
+        "nodes": [
+          "index_gen",
+          "index_encode",
+          "index_decode",
+          "index_valentine_question_app"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "index.html"
+      },
+      {
+        "id": "index_no_button_game_mechanic",
+        "label": "NO-button evasion game mechanic",
+        "nodes": [
+          "index_mv",
+          "index_clp",
+          "index_win",
+          "index_no_button_dodge_game"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "index.html"
+      },
+      {
+        "id": "index_setup_screen_modes",
+        "label": "Setup screen mode toggle feeding generation",
+        "nodes": [
+          "index_sw",
+          "index_valentine_mode_vs_custom_mode",
+          "index_gen"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "index_sw",
+      "label": "sw() - switch setup mode",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Setup & Mode Toggle",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "sw() - switch setup mode",
+      "source_file": "index.html",
+      "source_location": "lines 201-206",
+      "source_url": null
+    },
+    {
+      "id": "index_valentine_question_app",
+      "label": "Valentine Question Page App",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Setup & Mode Toggle",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "valentine question page app",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "readme_saint_valentin_soupette",
+      "label": "saint-valentin-soupette (project)",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Setup & Mode Toggle",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "saint-valentin-soupette (project)",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "index_valentine_mode_vs_custom_mode",
+      "label": "Valentine mode vs Custom mode toggle",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Setup & Mode Toggle",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "valentine mode vs custom mode toggle",
+      "rationale": "The setup screen (labeled '--- GESTION ADMIN ---' / '--- CONFIGURATION ---') offers two generation modes so the same page can serve either a canned St-Valentin proposal (name + gender role) or a fully custom question/success message pair, widening the tool beyond a single occasion.",
+      "source_file": "index.html",
+      "source_location": "lines 121-134, 199-206",
+      "source_url": null
+    },
+    {
+      "id": "index_decode",
+      "label": "decode()",
+      "author": null,
+      "captured_at": null,
+      "community": 1,
+      "community_name": "Anti-Spoiler URL Encoding",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "decode()",
+      "source_file": "index.html",
+      "source_location": "lines 175-181",
+      "source_url": null
+    },
+    {
+      "id": "index_encode",
+      "label": "encode()",
+      "author": null,
+      "captured_at": null,
+      "community": 1,
+      "community_name": "Anti-Spoiler URL Encoding",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "encode()",
+      "source_file": "index.html",
+      "source_location": "lines 184-189",
+      "source_url": null
+    },
+    {
+      "id": "index_anti_spoiler_encoding",
+      "label": "Anti-spoiler URL encoding scheme",
+      "author": null,
+      "captured_at": null,
+      "community": 1,
+      "community_name": "Anti-Spoiler URL Encoding",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "anti-spoiler url encoding scheme",
+      "rationale": "The question/answer text is base64+UTF-8 encoded into the 'q' and 'r' URL query params (via encode/decode) so the surprise message is not human-readable in the shared link, preventing spoilers before the recipient opens it. Comment explicitly labels this '--- DECODAGE URL (ANTI-SPOILER) ---'.",
+      "source_file": "index.html",
+      "source_location": "lines 169-189",
+      "source_url": null
+    },
+    {
+      "id": "index_clp",
+      "label": "clp() - close 'technical problem' popup",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "NO Button Dodge Game",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "clp() - close 'technical problem' popup",
+      "source_file": "index.html",
+      "source_location": "lines 270-273",
+      "source_url": null
+    },
+    {
+      "id": "index_mv",
+      "label": "mv() - evade the NO button",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "NO Button Dodge Game",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "mv() - evade the no button",
+      "source_file": "index.html",
+      "source_location": "lines 240-266",
+      "source_url": null
+    },
+    {
+      "id": "index_no_button_dodge_game",
+      "label": "NO button dodge game (nuclear mode)",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "NO Button Dodge Game",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "no button dodge game (nuclear mode)",
+      "rationale": "Comment labels this section '--- JEU DU BOUTON (NUCLEAR MODE) ---'. The NO button teleports to a random position on hover/touch/click so it can't be pressed; after 5 attempts a fake 'technical problem' popup appears nudging the user back to the pink YES button, then resumes evading \u2014 a comedic mechanic to make the recipient answer YES.",
+      "source_file": "index.html",
+      "source_location": "lines 235-273",
+      "source_url": null
+    },
+    {
+      "id": "index_cp",
+      "label": "cp() - copy link to clipboard",
+      "author": null,
+      "captured_at": null,
+      "community": 3,
+      "community_name": "Link Generation & Sharing",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "cp() - copy link to clipboard",
+      "source_file": "index.html",
+      "source_location": "lines 229-233",
+      "source_url": null
+    },
+    {
+      "id": "index_gen",
+      "label": "gen() - generate shareable link",
+      "author": null,
+      "captured_at": null,
+      "community": 3,
+      "community_name": "Link Generation & Sharing",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "gen() - generate shareable link",
+      "source_file": "index.html",
+      "source_location": "lines 208-227",
+      "source_url": null
+    },
+    {
+      "id": "index_link_generation_flow",
+      "label": "Shareable link generation & copy flow",
+      "author": null,
+      "captured_at": null,
+      "community": 3,
+      "community_name": "Link Generation & Sharing",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "shareable link generation & copy flow",
+      "rationale": "gen() builds the encoded share URL from the chosen mode's inputs and reveals it with a copy button (cp()), which copies to clipboard and shows a toast confirmation \u2014 the end-to-end mechanism by which the asker turns their message into a link to send.",
+      "source_file": "index.html",
+      "source_location": "lines 208-233",
+      "source_url": null
+    },
+    {
+      "id": "index_herts",
+      "label": "herts() - spawn floating hearts animation",
+      "author": null,
+      "captured_at": null,
+      "community": 4,
+      "community_name": "YES Celebration Animation",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "herts() - spawn floating hearts animation",
+      "source_file": "index.html",
+      "source_location": "lines 282-293",
+      "source_url": null
+    },
+    {
+      "id": "index_win",
+      "label": "win() - handle YES click",
+      "author": null,
+      "captured_at": null,
+      "community": 4,
+      "community_name": "YES Celebration Animation",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "win() - handle yes click",
+      "source_file": "index.html",
+      "source_location": "lines 275-280",
+      "source_url": null
+    }
+  ],
+  "links": [
+    {
+      "source": "index_clp",
+      "target": "index_mv",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 272",
+      "weight": 1.0
+    },
+    {
+      "source": "index_gen",
+      "target": "index_encode",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 223",
+      "weight": 1.0
+    },
+    {
+      "source": "index_win",
+      "target": "index_herts",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 279",
+      "weight": 1.0
+    },
+    {
+      "source": "index_valentine_question_app",
+      "target": "index_anti_spoiler_encoding",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "index_valentine_question_app",
+      "target": "index_link_generation_flow",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "index_valentine_question_app",
+      "target": "index_no_button_dodge_game",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "index_valentine_question_app",
+      "target": "index_valentine_mode_vs_custom_mode",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "index_anti_spoiler_encoding",
+      "target": "index_decode",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 175-181",
+      "weight": 1.0
+    },
+    {
+      "source": "index_anti_spoiler_encoding",
+      "target": "index_encode",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 184-189",
+      "weight": 1.0
+    },
+    {
+      "source": "index_link_generation_flow",
+      "target": "index_gen",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 208-227",
+      "weight": 1.0
+    },
+    {
+      "source": "index_link_generation_flow",
+      "target": "index_cp",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 229-233",
+      "weight": 1.0
+    },
+    {
+      "source": "index_no_button_dodge_game",
+      "target": "index_mv",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 240-266",
+      "weight": 1.0
+    },
+    {
+      "source": "index_no_button_dodge_game",
+      "target": "index_clp",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 270-273",
+      "weight": 1.0
+    },
+    {
+      "source": "index_valentine_mode_vs_custom_mode",
+      "target": "index_sw",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 201-206",
+      "weight": 1.0
+    },
+    {
+      "source": "index_encode",
+      "target": "index_decode",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 169-227",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_saint_valentin_soupette",
+      "target": "index_valentine_question_app",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "index_link_share_decode_flow",
+      "label": "Link generation & decoding flow (q/r params)",
+      "nodes": [
+        "index_gen",
+        "index_encode",
+        "index_decode",
+        "index_valentine_question_app"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html"
+    },
+    {
+      "id": "index_no_button_game_mechanic",
+      "label": "NO-button evasion game mechanic",
+      "nodes": [
+        "index_mv",
+        "index_clp",
+        "index_win",
+        "index_no_button_dodge_game"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html"
+    },
+    {
+      "id": "index_setup_screen_modes",
+      "label": "Setup screen mode toggle feeding generation",
+      "nodes": [
+        "index_sw",
+        "index_valentine_mode_vs_custom_mode",
+        "index_gen"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    }
+  ],
+  "built_at_commit": "c6c0c7978ee0641dde7db99a5ad3961b1dc9d2b5"
+}
